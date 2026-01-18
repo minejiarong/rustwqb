@@ -1,0 +1,531 @@
+[2026-01-17T11:56:38Z INFO  rustwqb::storage::connection] Database connection established with WAL mode and table initialized.
+[2026-01-17T11:56:39Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:56:39Z INFO  rustwqb::backtest::service] 正在执行回测任务恢复程序...
+[2026-01-17T11:56:39Z INFO  rustwqb::backtest::service] 未发现需要恢复的任务
+[2026-01-17T11:56:44Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:44Z INFO  rustwqb::session::wqb_session] <WQBSession [robaix@icloud.com]> search_operators(...) [https://api.worldquantbrain.com/operators]
+[2026-01-17T11:56:46Z INFO  rustwqb::backtest::service] 🚀 [w8] 开始回测任务 [1106]: ts_rank(fnd27_ashare_funda_asharefinancialindicator_d1_s_qfa_yoyop, 20) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:56:46Z INFO  rustwqb::backtest::service] 🚀 [w6] 开始回测任务 [1107]: group_zscore(ts_mean(fnd27_ashare_funda_asharebalancesheet_d1_cap_stk, 10), sector) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:56:46Z INFO  rustwqb::backtest::service] 🚀 [w9] 开始回测任务 [1108]: ts_zscore(fnd27_09000_net_cash_flows_fnc_act_value, 30) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:56:46Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:46Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: ymi508wN5eVaCs1drgmz22w
+[2026-01-17T11:56:47Z INFO  rustwqb::backtest::service] 🚀 [w2] 开始回测任务 [1109]: group_rank(fnd5_ltm_212_all_3_22_lpt_si, sector) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:56:47Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:47Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 3ueT66bN64v29Gd11Pf8svwA
+[2026-01-17T11:56:47Z INFO  rustwqb::backtest::service] 🚀 [w1] 开始回测任务 [1110]: ts_corr(fnd27_cash_paid_invest_valueadj, fnd27_06000_bonds_payable_value, 60) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:56:47Z INFO  rustwqb::backtest::service] 🚀 [w10] 开始回测任务 [1111]: winsorize(fnd27_ashare_funda_asharefinancialindicator_d1_s_fa_yoyeps_basic, std=4) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:56:47Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:47Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 48hXPg9Pj5dE99pUptmJFXl
+[2026-01-17T11:56:47Z INFO  rustwqb::backtest::service] 🚀 [w3] 开始回测任务 [1112]: ts_std_dev(fnd6_dpsa, 20) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:56:47Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:47Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1106]: 回测失败: Operator ts_rank does not support event inputs
+[2026-01-17T11:56:47Z INFO  rustwqb::backtest::service] 🚀 [w8] 开始回测任务 [1113]: group_scale(fnd5_hyr_212_all_3_22_lpt_si, sector) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:56:48Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:48Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:48Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 14wEJZ2BR4C68XSfTgob4G3
+[2026-01-17T11:56:48Z INFO  rustwqb::backtest::service] 🚀 [w7] 开始回测任务 [1114]: ts_returns(fnd27_balancesheet_408009000_undistributed_profit_value, 5, mode=1) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:56:48Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:48Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: YWDrw8FY5eCavb13gsjVWwJ
+[2026-01-17T11:56:48Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:48Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: uDkEp3lE544b7pYqOFJXEu
+[2026-01-17T11:56:48Z INFO  rustwqb::backtest::service] 🚀 [w4] 开始回测任务 [1115]: rank(fnd27_01000_annual_st_borrow_value, rate=2) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:56:48Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:48Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 4g84P4dqM4tUakI179Z0mbwu
+[2026-01-17T11:56:48Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:48Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:48Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 1d8dbP11m4JPabI1eKDpjHDo
+[2026-01-17T11:56:48Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:48Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: vacOEbiz4pz9eF1e94ikY7c
+[2026-01-17T11:56:48Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:48Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:48Z INFO  rustwqb::backtest::service] 🚀 [w5] 开始回测任务 [1116]: ts_product(fnd27_04000_oth_non_cur_liab_value, 5) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:56:48Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:48Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:49Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:49Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:49Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:49Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 2HoQ6bbbW5gg8XdTXlYoeWf
+[2026-01-17T11:56:49Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:49Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 2GDSa2Dx4nVahXdSSttGY7
+[2026-01-17T11:56:49Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:56:50Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:08Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:08Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1107]: 回测失败: Operator ts_mean does not support event inputs
+[2026-01-17T11:57:08Z INFO  rustwqb::backtest::service] 🚀 [w6] 开始回测任务 [1117]: vec_avg(fnd5_cur_212_all_42_af_si) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:57:08Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:08Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 352tXqf4R4gUckWBZfWmjVh
+[2026-01-17T11:57:08Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:09Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:09Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1109]: 回测失败: Operator group_rank does not support event inputs
+[2026-01-17T11:57:09Z INFO  rustwqb::backtest::service] 🚀 [w2] 开始回测任务 [1118]: vec_sum(fnd5_ltm_232_all_23_lpt_fc) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:57:09Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:09Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:09Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:09Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1113]: 回测失败: Operator group_scale does not support event inputs
+[2026-01-17T11:57:09Z INFO  rustwqb::backtest::service] 🚀 [w8] 开始回测任务 [1119]: vec_min(fnd6_rectrq) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:57:09Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:09Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1111]: 回测失败: Operator winsorize does not support event inputs
+[2026-01-17T11:57:09Z INFO  rustwqb::backtest::service] 🚀 [w10] 开始回测任务 [1120]: vec_max(fnd6_xopro) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:57:09Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:09Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:09Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 3y6eQ12NS4Fr9LH1FwREMpV
+[2026-01-17T11:57:09Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:09Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:10Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:10Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:11Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:57:12Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:57:14Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:57:14Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:57:14Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [max 3 tries ran out]
+[2026-01-17T11:57:14Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1120]: 触发 WQB 频率限制 (429)
+[2026-01-17T11:57:14Z INFO  rustwqb::backtest::service] 🚀 [w10] 开始回测任务 [1121]: group_mean(fnd27_ashare_funda_asharefinancialindicator_d1_s_fa_optoliqdebt, 1, sector) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:57:16Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [max 3 tries ran out]
+[2026-01-17T11:57:16Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1119]: 触发 WQB 频率限制 (429)
+[2026-01-17T11:57:16Z INFO  rustwqb::backtest::service] 🚀 [w8] 开始回测任务 [1122]: ts_corr(fnd27_01000_cash_recp_return_invest_value, fnd27_06000_less_selling_dist_exp_value, 90) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:57:17Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:57:18Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:57:20Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:57:20Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [max 3 tries ran out]
+[2026-01-17T11:57:20Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1121]: 触发 WQB 频率限制 (429)
+[2026-01-17T11:57:20Z INFO  rustwqb::backtest::service] 🚀 [w10] 开始回测任务 [1120]: vec_max(fnd6_xopro) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:57:23Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:57:26Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [max 3 tries ran out]
+[2026-01-17T11:57:26Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:57:26Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [max 3 tries ran out]
+[2026-01-17T11:57:26Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1122]: 触发 WQB 频率限制 (429)
+[2026-01-17T11:57:26Z INFO  rustwqb::backtest::service] 🚀 [w8] 开始回测任务 [1119]: vec_min(fnd6_rectrq) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:57:26Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [max 3 tries ran out]
+[2026-01-17T11:57:26Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1120]: 触发 WQB 频率限制 (429)
+[2026-01-17T11:57:26Z INFO  rustwqb::backtest::service] 🚀 [w10] 开始回测任务 [1121]: group_mean(fnd27_ashare_funda_asharefinancialindicator_d1_s_fa_optoliqdebt, 1, sector) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:57:29Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:29Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:29Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:29Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:29Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:30Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:30Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:31Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:31Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [2 tries]
+[2026-01-17T11:57:33Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [max 3 tries ran out]
+[2026-01-17T11:57:38Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [max 3 tries ran out]
+[2026-01-17T11:57:39Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [max 3 tries ran out]
+[2026-01-17T11:57:39Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1121]: 触发 WQB 频率限制 (429)
+[2026-01-17T11:57:39Z INFO  rustwqb::backtest::service] 🚀 [w10] 开始回测任务 [1120]: vec_max(fnd6_xopro) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:57:40Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [max 3 tries ran out]
+[2026-01-17T11:57:41Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [max 3 tries ran out]
+[2026-01-17T11:57:41Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1119]: 触发 WQB 频率限制 (429)
+[2026-01-17T11:57:41Z INFO  rustwqb::backtest::service] 🚀 [w8] 开始回测任务 [1122]: ts_corr(fnd27_01000_cash_recp_return_invest_value, fnd27_06000_less_selling_dist_exp_value, 90) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:57:46Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [max 3 tries ran out]
+[2026-01-17T11:57:48Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [max 3 tries ran out]
+[2026-01-17T11:57:49Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:49Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:50Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:50Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:50Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:50Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:51Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:51Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:53Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [max 3 tries ran out]
+[2026-01-17T11:57:54Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [3 tries]
+[2026-01-17T11:57:54Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 2BzSOw2od4vMbcThjyZSVju
+[2026-01-17T11:57:55Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:57:55Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [max 3 tries ran out]
+[2026-01-17T11:57:56Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [3 tries]
+[2026-01-17T11:57:56Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: Gqsj08kx5dZaSG1544mDYuZ
+[2026-01-17T11:57:56Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:10Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:10Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [YWDrw8FY5eCavb13gsjVWwJ]: COMPLETE
+[2026-01-17T11:58:10Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:10Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [4g84P4dqM4tUakI179Z0mbwu]: COMPLETE
+[2026-01-17T11:58:10Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:10Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1110]: Some("58N7J72z")
+[2026-01-17T11:58:10Z INFO  rustwqb::backtest::service] 🚀 [w1] 开始回测任务 [1119]: vec_min(fnd6_rectrq) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:10Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:10Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [vacOEbiz4pz9eF1e94ikY7c]: COMPLETE
+[2026-01-17T11:58:10Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:10Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1112]: Some("2rPq5qvN")
+[2026-01-17T11:58:10Z INFO  rustwqb::backtest::service] 🚀 [w3] 开始回测任务 [1121]: group_mean(fnd27_ashare_funda_asharefinancialindicator_d1_s_fa_optoliqdebt, 1, sector) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:10Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:10Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:10Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 2rv6s2re4xY9GEGann2FDC
+[2026-01-17T11:58:10Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:10Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [2HoQ6bbbW5gg8XdTXlYoeWf]: COMPLETE
+[2026-01-17T11:58:10Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:10Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 4GCcYw4nL4xQbdI18sdkim2u
+[2026-01-17T11:58:11Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:11Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:11Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1114]: Some("9qgPlP92")
+[2026-01-17T11:58:11Z INFO  rustwqb::backtest::service] 🚀 [w7] 开始回测任务 [1123]: ts_zscore(fnd27_09000_inc_tax_value, 60) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:11Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:11Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:11Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1115]: Some("xAXwvwow")
+[2026-01-17T11:58:11Z INFO  rustwqb::backtest::service] 🚀 [w4] 开始回测任务 [1124]: group_zscore(fnd5_hyr_232_13_lpt_fc, sector) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:11Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:11Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: ckuE29Fc4J4aDXld1fRRRx
+[2026-01-17T11:58:11Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:11Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 42bWA564r4C7bjqwxVJpDjC
+[2026-01-17T11:58:11Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:11Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [2GDSa2Dx4nVahXdSSttGY7]: COMPLETE
+[2026-01-17T11:58:11Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:11Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:11Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [48hXPg9Pj5dE99pUptmJFXl]: COMPLETE
+[2026-01-17T11:58:11Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:11Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:12Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:12Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1116]: Some("wpXwowAv")
+[2026-01-17T11:58:12Z INFO  rustwqb::backtest::service] 🚀 [w5] 开始回测任务 [1125]: ts_rank(fnd27_ashare_funda_asharefinancialindicator_d1_s_fa_yoyeps_basic, 30) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:12Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:12Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1108]: Some("E5o0Q0qm")
+[2026-01-17T11:58:12Z INFO  rustwqb::backtest::service] 🚀 [w9] 开始回测任务 [1126]: reduce_norm(fnd5_44_lpt_sb) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:12Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:12Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 3oB4Bcfar4Uc8IhMTcoY3Of
+[2026-01-17T11:58:13Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:14Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:58:15Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [2 tries]
+[2026-01-17T11:58:15Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 11R9UY9uw4F8cuL1geSUlBS0
+[2026-01-17T11:58:15Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:15Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:16Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:30Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:30Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [352tXqf4R4gUckWBZfWmjVh]: COMPLETE
+[2026-01-17T11:58:31Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:31Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1117]: Some("6XgPM1YE")
+[2026-01-17T11:58:31Z INFO  rustwqb::backtest::service] 🚀 [w6] 开始回测任务 [1127]: reduce_range(fnd5_ltm_212_all_32_lpt_si) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:31Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:31Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:31Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [3y6eQ12NS4Fr9LH1FwREMpV]: COMPLETE
+[2026-01-17T11:58:31Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:31Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 35IBKA2CG4pybI911KxLcwXz
+[2026-01-17T11:58:31Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:31Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1118]: Some("xAXwvQnl")
+[2026-01-17T11:58:31Z INFO  rustwqb::backtest::service] 🚀 [w2] 开始回测任务 [1128]: reduce_percentage(fnd5_hyr_212_all_56_lpt_si, percentage=0.25) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:32Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:32Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1121]: 回测失败: Operator group_mean does not support event inputs
+[2026-01-17T11:58:32Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:32Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1127]: 回测失败: Attempted to use inaccessible or unknown operator "reduce_range"
+[2026-01-17T11:58:32Z INFO  rustwqb::backtest::service] 🚀 [w3] 开始回测任务 [1129]: ts_returns(mdl26_traded_volume_u, 1, mode=1) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:32Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:32Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 1qkXOy1Qg4Qvbp0gGgM7sR7
+[2026-01-17T11:58:32Z INFO  rustwqb::backtest::service] 🚀 [w6] 开始回测任务 [1130]: ts_product(mdl138_qpdi4_op_margin, 10) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:32Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:32Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:32Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:32Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1128]: 回测失败: Attempted to use inaccessible or unknown operator "reduce_percentage"
+[2026-01-17T11:58:32Z INFO  rustwqb::backtest::service] 🚀 [w2] 开始回测任务 [1131]: ts_std_dev(anl14_mean_ntp_fy2, 20) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:32Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:32Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 2AxqQ63FO4vQaKYjTCav449
+[2026-01-17T11:58:32Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:32Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 2RW1EW2ru5368DO8ulSj7dT
+[2026-01-17T11:58:32Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:32Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:32Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 42kK6zUo4nH8OVOekOh7bi
+[2026-01-17T11:58:32Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:33Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:33Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:33Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1126]: 回测失败: Attempted to use inaccessible or unknown operator "reduce_norm"
+[2026-01-17T11:58:33Z INFO  rustwqb::backtest::service] 🚀 [w9] 开始回测任务 [1132]: group_rank(anl14_high_cfps_fy3, sector) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:33Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:33Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 2LkTQLaWI4sMc976Ss8LHNR
+[2026-01-17T11:58:34Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:35Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:35Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1125]: 回测失败: Operator ts_rank does not support event inputs
+[2026-01-17T11:58:35Z INFO  rustwqb::backtest::service] 🚀 [w5] 开始回测任务 [1133]: group_scale(anl14_high_ebit_fy3, sector) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:35Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:37Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:38Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:58:44Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:58:44Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [max 3 tries ran out]
+[2026-01-17T11:58:44Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1133]: 触发 WQB 频率限制 (429)
+[2026-01-17T11:58:44Z INFO  rustwqb::backtest::service] 🚀 [w5] 开始回测任务 [1134]: ts_corr(anl10_ndtfy1_pred_surps_v1_3906, anl10_ndtpast_det_excflag_3146, 40) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:47Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:58:50Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:58:50Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [max 3 tries ran out]
+[2026-01-17T11:58:50Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1134]: 触发 WQB 频率限制 (429)
+[2026-01-17T11:58:50Z INFO  rustwqb::backtest::service] 🚀 [w5] 开始回测任务 [1133]: group_scale(anl14_high_ebit_fy3, sector) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:51Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:52Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:52Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:53Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:53Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:53Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1130]: 回测失败: Operator ts_product does not support event inputs
+[2026-01-17T11:58:53Z INFO  rustwqb::backtest::service] 🚀 [w6] 开始回测任务 [1135]: ts_zscore(anl69_dif_best_roe_stddev, 50) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:58:53Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:53Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:58:54Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:55Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:58:56Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:57Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:58:58Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:59:00Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [max 3 tries ran out]
+[2026-01-17T11:59:01Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [max 3 tries ran out]
+[2026-01-17T11:59:01Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1133]: 触发 WQB 频率限制 (429)
+[2026-01-17T11:59:01Z INFO  rustwqb::backtest::service] 🚀 [w5] 开始回测任务 [1134]: ts_corr(anl10_ndtfy1_pred_surps_v1_3906, anl10_ndtpast_det_excflag_3146, 40) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:59:01Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [max 3 tries ran out]
+[2026-01-17T11:59:01Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1135]: 触发 WQB 频率限制 (429)
+[2026-01-17T11:59:01Z INFO  rustwqb::backtest::service] 🚀 [w6] 开始回测任务 [1136]: ts_rank(anl69_ffops_expected_report_time, 15) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:59:04Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:59:04Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:59:06Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:59:07Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [max 3 tries ran out]
+[2026-01-17T11:59:07Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1134]: 触发 WQB 频率限制 (429)
+[2026-01-17T11:59:07Z INFO  rustwqb::backtest::service] 🚀 [w5] 开始回测任务 [1135]: ts_zscore(anl69_dif_best_roe_stddev, 50) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:59:07Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:59:07Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [max 3 tries ran out]
+[2026-01-17T11:59:07Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1136]: 触发 WQB 频率限制 (429)
+[2026-01-17T11:59:07Z INFO  rustwqb::backtest::service] 🚀 [w6] 开始回测任务 [1137]: rank(mdl175_rb, rate=2) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:59:09Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:59:10Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:59:11Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:12Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:59:12Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:12Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:12Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [3 tries]
+[2026-01-17T11:59:12Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 4qFsOq5aN4WJ8BbwKVO2Cze
+[2026-01-17T11:59:13Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:13Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1135]: 回测失败: Operator ts_zscore does not support event inputs
+[2026-01-17T11:59:13Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:13Z INFO  rustwqb::backtest::service] 🚀 [w5] 开始回测任务 [1133]: group_scale(anl14_high_ebit_fy3, sector) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:59:13Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:13Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 3tsGb912N4Xabn7ZDVu7nOo
+[2026-01-17T11:59:13Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:13Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:15Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:16Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:16Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1120]: 回测失败: 未知引擎错误
+[2026-01-17T11:59:16Z INFO  rustwqb::backtest::service] 🚀 [w10] 开始回测任务 [1136]: ts_rank(anl69_ffops_expected_report_time, 15) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:59:17Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:17Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: fCNDmg8k4nMatITh6WiuhG
+[2026-01-17T11:59:17Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:17Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:17Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [Gqsj08kx5dZaSG1544mDYuZ]: COMPLETE
+[2026-01-17T11:59:17Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [max 3 tries ran out]
+[2026-01-17T11:59:18Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:18Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1122]: Some("qMek7PE1")
+[2026-01-17T11:59:18Z INFO  rustwqb::backtest::service] 🚀 [w8] 开始回测任务 [1134]: ts_corr(anl10_ndtfy1_pred_surps_v1_3906, anl10_ndtpast_det_excflag_3146, 40) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:59:18Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [max 3 tries ran out]
+[2026-01-17T11:59:18Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1137]: 触发 WQB 频率限制 (429)
+[2026-01-17T11:59:18Z INFO  rustwqb::backtest::service] 🚀 [w6] 开始回测任务 [1138]: zscore(mdl175_01ame) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:59:20Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:59:21Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:59:23Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T11:59:24Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [max 3 tries ran out]
+[2026-01-17T11:59:24Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1138]: 触发 WQB 频率限制 (429)
+[2026-01-17T11:59:24Z INFO  rustwqb::backtest::service] 🚀 [w6] 开始回测任务 [1137]: rank(mdl175_rb, rate=2) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:59:28Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [max 3 tries ran out]
+[2026-01-17T11:59:29Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [3 tries]
+[2026-01-17T11:59:29Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 1icrk3aaB4Pwb21YymTnT3H
+[2026-01-17T11:59:29Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:31Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [max 3 tries ran out]
+[2026-01-17T11:59:31Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [2 tries]
+[2026-01-17T11:59:31Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: oN8GEaCY4lBctX1cdMhHyWj
+[2026-01-17T11:59:31Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:32Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:33Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:33Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [42bWA564r4C7bjqwxVJpDjC]: COMPLETE
+[2026-01-17T11:59:33Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:33Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [ckuE29Fc4J4aDXld1fRRRx]: COMPLETE
+[2026-01-17T11:59:33Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:33Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1124]: Some("YPXwaN1w")
+[2026-01-17T11:59:33Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:33Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1123]: Some("VkKwNXMw")
+[2026-01-17T11:59:33Z INFO  rustwqb::backtest::service] 🚀 [w7] 开始回测任务 [1138]: zscore(mdl175_01ame) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:59:33Z INFO  rustwqb::backtest::service] 🚀 [w4] 开始回测任务 [1139]: winsorize(mdl26_peg_smartestimate_fy1, std=3) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:59:33Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:33Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:33Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 3jxM2g3VU4P29AegdqW10ty
+[2026-01-17T11:59:34Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:34Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:34Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:35Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:37Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:40Z WARN  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [max 3 tries ran out]
+[2026-01-17T11:59:41Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [2 tries]
+[2026-01-17T11:59:41Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 4edW4AaT94LkcbKiKqFniaA
+[2026-01-17T11:59:41Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:49Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:49Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1134]: 回测失败: Operator ts_corr does not support event inputs
+[2026-01-17T11:59:49Z INFO  rustwqb::backtest::service] 🚀 [w8] 开始回测任务 [1140]: group_mean(mdl135_d01_vme, 1, sector) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:59:49Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:49Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 13fTNCSP4tacKokUmgvIwT
+[2026-01-17T11:59:50Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:52Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:52Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:52Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1119]: 回测失败: 未知引擎错误
+[2026-01-17T11:59:52Z INFO  rustwqb::backtest::service] 🚀 [w1] 开始回测任务 [1141]: ts_corr(mdl138_aor_5idpq, mdl135_d02_os, 25) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:59:52Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:52Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 4lzgjAcc65599TpPKpG9HaI
+[2026-01-17T11:59:53Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:53Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:54Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:54Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:54Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:55Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:55Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [2LkTQLaWI4sMc976Ss8LHNR]: COMPLETE
+[2026-01-17T11:59:56Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:56Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1132]: Some("QPmr0QZr")
+[2026-01-17T11:59:56Z INFO  rustwqb::backtest::service] 🚀 [w9] 开始回测任务 [1142]: ts_returns(mdl26_prsprise_fq1_earnings, 3, mode=1) (region: CHN, universe: TOP2000U)
+[2026-01-17T11:59:56Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:56Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: ufT86e6b4ClcKipnqE0BZs
+[2026-01-17T11:59:56Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T11:59:58Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:02Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:10Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:10Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1140]: 回测失败: Operator group_mean does not support event inputs
+[2026-01-17T12:00:10Z INFO  rustwqb::backtest::service] 🚀 [w8] 开始回测任务 [1143]: vec_count(fnd5_hyr_212_all_001_lpt_si) (region: CHN, universe: TOP2000U)
+[2026-01-17T12:00:12Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:13Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T12:00:14Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:14Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1141]: 回测失败: Operator ts_corr does not support event inputs
+[2026-01-17T12:00:14Z INFO  rustwqb::backtest::service] 🚀 [w1] 开始回测任务 [1144]: vec_avg(fnd27_ashare_funda_asharefinancialindicator_d1_s_fa_optoliqdebt) (region: CHN, universe: TOP2000U)
+[2026-01-17T12:00:14Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:14Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:15Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:15Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:16Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T12:00:16Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [3 tries]
+[2026-01-17T12:00:16Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 4rF2MgeK552T8CU1buIP0KtA
+[2026-01-17T12:00:16Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:16Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T12:00:17Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [2 tries]
+[2026-01-17T12:00:17Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: T5nyH7gV4x5aRD10UDGPe93
+[2026-01-17T12:00:17Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:17Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:18Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:22Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:33Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:35Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:35Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [2AxqQ63FO4vQaKYjTCav449]: COMPLETE
+[2026-01-17T12:00:35Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:35Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:35Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [3tsGb912N4Xabn7ZDVu7nOo]: COMPLETE
+[2026-01-17T12:00:35Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:35Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [42kK6zUo4nH8OVOekOh7bi]: COMPLETE
+[2026-01-17T12:00:35Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:35Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1129]: Some("vRanAl9w")
+[2026-01-17T12:00:35Z INFO  rustwqb::backtest::service] 🚀 [w3] 开始回测任务 [1145]: ts_product(pv27_pct_change_ave_60m, 12) (region: CHN, universe: TOP2000U)
+[2026-01-17T12:00:35Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:35Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1133]: Some("j2NlarEk")
+[2026-01-17T12:00:35Z INFO  rustwqb::backtest::service] 🚀 [w5] 开始回测任务 [1146]: ts_std_dev(fnd5_cur_212_all_42_af_si, 10) (region: CHN, universe: TOP2000U)
+[2026-01-17T12:00:35Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:35Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1131]: Some("2rPq5LEZ")
+[2026-01-17T12:00:35Z INFO  rustwqb::backtest::service] 🚀 [w2] 开始回测任务 [1147]: group_zscore(fnd5_ltm_212_all_32_lpt_si, sector) (region: CHN, universe: TOP2000U)
+[2026-01-17T12:00:36Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:36Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 26fGCNcgi4xB9MjIDHzD4d1
+[2026-01-17T12:00:36Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:36Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 2W2GmM8FV4vKci1OCIQh7Dk
+[2026-01-17T12:00:36Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:36Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:37Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:37Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:37Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:38Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
+[2026-01-17T12:00:38Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:38Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [fCNDmg8k4nMatITh6WiuhG]: COMPLETE
+[2026-01-17T12:00:38Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [2 tries]
+[2026-01-17T12:00:38Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 3bfoXSfiR4U8aV0NscK4jBr
+[2026-01-17T12:00:39Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:39Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:39Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1136]: Some("bl72adkm")
+[2026-01-17T12:00:39Z INFO  rustwqb::backtest::service] 🚀 [w10] 开始回测任务 [1148]: ts_corr(fnd5_hyr_212_all_56_lpt_si, fnd6_dpsa, 20) (region: CHN, universe: TOP2000U)
+[2026-01-17T12:00:39Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:39Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 45Y5nE6it4TQ8Z25AUxS53g
+[2026-01-17T12:00:39Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:42Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:53Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:53Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [oN8GEaCY4lBctX1cdMhHyWj]: COMPLETE
+[2026-01-17T12:00:53Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:53Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1137]: Some("JjR08GKn")
+[2026-01-17T12:00:53Z INFO  rustwqb::backtest::service] 🚀 [w6] 开始回测任务 [1149]: ts_rank(fnd27_01000_cash_recp_return_invest_value, 45) (region: CHN, universe: TOP2000U)
+[2026-01-17T12:00:54Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:54Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: J4RdaeRs4UTc5QB8IXKPSQ
+[2026-01-17T12:00:54Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:55Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:55Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1138]: 回测失败: There was an error while running the simulation. Please try again or contact BRAIN support if this problem persists.
+[2026-01-17T12:00:55Z INFO  rustwqb::backtest::service] 🚀 [w7] 开始回测任务 [1150]: reduce_powersum(fnd6_rectrq, constant=2, precise=false) (region: CHN, universe: TOP2000U)
+[2026-01-17T12:00:55Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:55Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 3id2j86Ns4xKcha18sUytRP2
+[2026-01-17T12:00:56Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:56Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:56Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1146]: 回测失败: Operator ts_std_dev does not support event inputs
+[2026-01-17T12:00:56Z INFO  rustwqb::backtest::service] 🚀 [w5] 开始回测任务 [1151]: group_backfill(fnd27_04000_oth_non_cur_liab_value, sector, d=5, std=4.0) (region: CHN, universe: TOP2000U)
+[2026-01-17T12:00:56Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:56Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1145]: 回测失败: Operator ts_product does not support event inputs
+[2026-01-17T12:00:56Z INFO  rustwqb::backtest::service] 🚀 [w3] 开始回测任务 [1152]: ts_zscore(fnd27_balancesheet_408009000_undistributed_profit_value, 30) (region: CHN, universe: TOP2000U)
+[2026-01-17T12:00:56Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:56Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 1KTLgb7T751vaVZ4mLZJtyb
+[2026-01-17T12:00:57Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:57Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:57Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: TQU0LaSs5dR8SIBMVmZ61B
+[2026-01-17T12:00:57Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:57Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:58Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:58Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:59Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:59Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1147]: 回测失败: Operator group_zscore does not support event inputs
+[2026-01-17T12:00:59Z INFO  rustwqb::backtest::service] 🚀 [w2] 开始回测任务 [1153]: rank(fnd5_44_lpt_sb, rate=2) (region: CHN, universe: TOP2000U)
+[2026-01-17T12:00:59Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:59Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: 47XIwL8cx4juaU8Heu9GPbo
+[2026-01-17T12:00:59Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:59Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:00:59Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1148]: 回测失败: Operator ts_corr does not support event inputs
+[2026-01-17T12:01:00Z INFO  rustwqb::backtest::service] 🚀 [w10] 开始回测任务 [1154]: zscore(fnd5_ltm_232_all_23_lpt_fc) (region: CHN, universe: TOP2000U)
+[2026-01-17T12:01:00Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:00Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: BLtlSbce4DXaiEuiQE4yX2
+[2026-01-17T12:01:00Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:03Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:03Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [4edW4AaT94LkcbKiKqFniaA]: COMPLETE
+[2026-01-17T12:01:03Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:03Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1139]: Some("RR0Zem00")
+[2026-01-17T12:01:03Z INFO  rustwqb::backtest::service] 🚀 [w4] 开始回测任务 [1155]: group_rank(fnd27_06000_less_selling_dist_exp_value, sector) (region: CHN, universe: TOP2000U)
+[2026-01-17T12:01:03Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:03Z INFO  rustwqb::backtest::worker] ▶ 模拟任务已提交: dpvrB5qN4gA8KZiAfTph0m
+[2026-01-17T12:01:04Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:14Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:16Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:16Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1150]: 回测失败: Attempted to use inaccessible or unknown operator "reduce_powersum"
+[2026-01-17T12:01:17Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:18Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:18Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:18Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1151]: 回测失败: Unknown attribute "d" encountered
+[2026-01-17T12:01:18Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:18Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:18Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [ufT86e6b4ClcKipnqE0BZs]: COMPLETE
+[2026-01-17T12:01:18Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:18Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1142]: Some("A1qJxl2E")
+[2026-01-17T12:01:20Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:20Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:20Z WARN  rustwqb::backtest::service] ✗ 任务执行失败 [1154]: 回测失败: Operator zscore does not support event inputs
+[2026-01-17T12:01:24Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:34Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:37Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:37Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [4rF2MgeK552T8CU1buIP0KtA]: COMPLETE
+[2026-01-17T12:01:38Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:38Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:38Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [T5nyH7gV4x5aRD10UDGPe93]: COMPLETE
+[2026-01-17T12:01:39Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:39Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1144]: Some("VkKwN6RY")
+[2026-01-17T12:01:39Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:39Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1143]: Some("E5o0Qpb0")
+[2026-01-17T12:01:40Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:44Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:55Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:01:58Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:02:01Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:02:05Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:02:15Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:02:15Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [J4RdaeRs4UTc5QB8IXKPSQ]: COMPLETE
+[2026-01-17T12:02:15Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:02:15Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1149]: Some("O0KwWJl7")
+[2026-01-17T12:02:19Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:02:19Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [TQU0LaSs5dR8SIBMVmZ61B]: COMPLETE
+[2026-01-17T12:02:19Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:02:19Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1152]: Some("RR0ZeAma")
+[2026-01-17T12:02:21Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:02:21Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [47XIwL8cx4juaU8Heu9GPbo]: COMPLETE
+[2026-01-17T12:02:21Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:02:21Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1153]: Some("omQwaobn")
+[2026-01-17T12:02:25Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:02:25Z INFO  rustwqb::backtest::worker] ✓ 模拟完成 [dpvrB5qN4gA8KZiAfTph0m]: COMPLETE
+[2026-01-17T12:02:25Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> request(...) [1 tries]
+[2026-01-17T12:02:25Z INFO  rustwqb::backtest::service] ✓ 任务执行成功 [1155]: Some("1Y6VWN5M")
