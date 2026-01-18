@@ -1,3 +1,4 @@
+use crate::ai::build_llm_http_client;
 use crate::ai::types::{ChatRequest, ChatResponse, LlmError, LlmProvider};
 use async_trait::async_trait;
 use reqwest::StatusCode;
@@ -18,15 +19,16 @@ impl CerebrasProvider {
             .unwrap_or_else(|_| "https://api.cerebras.ai/v1".to_string());
 
         Ok(Self {
-            client: reqwest::Client::new(),
+            client: build_llm_http_client()?,
             api_key,
             base_url,
         })
     }
 
     pub fn new(api_key: String, base_url: String) -> Self {
+        let client = build_llm_http_client().unwrap_or_else(|_| reqwest::Client::new());
         Self {
-            client: reqwest::Client::new(),
+            client,
             api_key,
             base_url,
         }
