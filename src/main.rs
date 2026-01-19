@@ -261,6 +261,20 @@ async fn main() -> io::Result<()> {
                         }
                     }
                 }
+                AppCommand::BacktestsSanitize { limit } => {
+                    let dbc = db_bg.clone();
+                    let txc = evt_tx_bg.clone();
+                    tokio::spawn(async move {
+                        match BacktestRepository::sanitize_queued_expressions(dbc.as_ref(), limit as u64).await {
+                            Ok((matched, cleaned)) => {
+                                let _ = txc.send(AppEvent::Message(format!("已清洗入队表达式：匹配 {} 条，修正 {}", matched, cleaned)));
+                            }
+                            Err(e) => {
+                                let _ = txc.send(AppEvent::Error(format!("清洗失败: {}", e)));
+                            }
+                        }
+                    });
+                }
                 AppCommand::GenerateStart {
                     model,
                     batch,
@@ -533,7 +547,7 @@ async fn main() -> io::Result<()> {
                     }
                 }
                 AppCommand::Help => {
-                    let _ = evt_tx_bg.send(AppEvent::Message("可用命令: backtest <expr> | backtest clear | alphas clear | fields sync | fields stats | fields sample [region] [universe] [delay] [n] | errors export [limit] [path] | generate once <n> [model] [region] [universe] [delay] [sample_size] [auto_backtest] | generate loop <n> <sec> [model] [region] [universe] [delay] [sample_size] [auto_backtest] | generate stop | __INTERNAL_GET_DETAIL__ <expr>".to_string()));
+                    let _ = evt_tx_bg.send(AppEvent::Message("可用命令: backtest <expr> | backtest clear | backtest sanitize [limit] | alphas clear | fields sync | fields stats | fields sample [region] [universe] [delay] [n] | errors export [limit] [path] | generate once <n> [model] [region] [universe] [delay] [sample_size] [auto_backtest] | generate loop <n> <sec> [model] [region] [universe] [delay] [sample_size] [auto_backtest] | generate stop | __INTERNAL_GET_DETAIL__ <expr>".to_string()));
                 }
                 AppCommand::Quit => {
                     let _ = evt_tx_bg.send(AppEvent::Message("收到退出命令".to_string()));

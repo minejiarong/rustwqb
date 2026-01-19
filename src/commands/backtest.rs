@@ -8,11 +8,12 @@ pub async fn run(
     db: &DatabaseConnection,
     evt_tx: mpsc::UnboundedSender<AppEvent>,
 ) {
-    let _ = evt_tx.send(AppEvent::Log(format!("正在提交回测任务: {}", expression)));
+    let sanitized = crate::generate::parser::sanitize_expression(expression);
+    let _ = evt_tx.send(AppEvent::Log(format!("正在提交回测任务: {}", sanitized)));
 
     // 1. 先在 alphas 主表中占位（使用默认回测设置）
     let def = AlphaDefinition {
-        expression: expression.to_string(),
+        expression: sanitized.to_string(),
         region: "CHN".to_string(),
         universe: "TOP2000U".to_string(),
         language: "FASTEXPR".to_string(),
@@ -29,7 +30,7 @@ pub async fn run(
     // 2. 提交到后台任务队列
     match BacktestRepository::create_job(
         db,
-        expression.to_string(),
+        sanitized.to_string(),
         "CHN".to_string(),
         "TOP2000U".to_string(),
     )

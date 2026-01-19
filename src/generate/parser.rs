@@ -1,7 +1,17 @@
+use regex::Regex;
+
 pub struct ParsedResult {
     pub exprs: Vec<String>,
     pub total_lines: usize,
     pub rejected_examples: Vec<String>,
+}
+
+pub fn sanitize_expression(expr: &str) -> String {
+    let re = Regex::new(r"\{[^}]*\}").unwrap();
+    let s = re.replace_all(expr, "");
+    let s = s.replace('\n', " ");
+    let s = s.split_whitespace().collect::<Vec<_>>().join(" ");
+    s.trim().to_string()
 }
 
 pub fn parse_alpha_exprs(text: &str) -> ParsedResult {
@@ -15,11 +25,12 @@ pub fn parse_alpha_exprs(text: &str) -> ParsedResult {
         if line.is_empty() {
             continue;
         }
-        let expr = if let Some(rest) = line.strip_prefix("ALPHA_EXPR:") {
+        let expr_raw = if let Some(rest) = line.strip_prefix("ALPHA_EXPR:") {
             rest.trim()
         } else {
             line
         };
+        let expr = sanitize_expression(expr_raw);
 
         if expr.len() < 8 {
             if rejected.len() < 5 {
@@ -33,7 +44,7 @@ pub fn parse_alpha_exprs(text: &str) -> ParsedResult {
             }
             continue;
         }
-        if !paren_balanced(expr) {
+        if !paren_balanced(&expr) {
             if rejected.len() < 5 {
                 rejected.push(format!("bad_parens: {expr}"));
             }

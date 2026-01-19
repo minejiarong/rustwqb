@@ -20,6 +20,8 @@ impl PromptBuilder {
             "Each line MUST start with 'ALPHA_EXPR:' followed by the expression.".to_string(),
         );
         lines.push("No markdown, no explanations.".to_string());
+        lines.push("Do NOT include any curly braces {} or annotations.".to_string());
+        lines.push("Do NOT append trailing markers like {CR}, {…}, comments or metadata.".to_string());
         lines.push("".to_string());
         lines.push(
             "Example format (use placeholders; do NOT reuse placeholders as real fields):"
@@ -131,6 +133,8 @@ impl PromptBuilder {
             "Each line MUST start with 'ALPHA_EXPR:' followed by the expression.".to_string(),
         );
         lines.push("No markdown, no explanations.".to_string());
+        lines.push("Do NOT include any curly braces {} or annotations.".to_string());
+        lines.push("Do NOT append trailing markers like {CR}, {…}, comments or metadata.".to_string());
         lines.push("".to_string());
 
         if region.is_some() || universe.is_some() || delay.is_some() {

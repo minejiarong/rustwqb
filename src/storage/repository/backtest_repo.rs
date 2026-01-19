@@ -399,6 +399,41 @@ impl BacktestRepository {
             .all(db)
             .await
     }
+
+    pub async fn sanitize_queued_expressions(
+        db: &DatabaseConnection,
+        limit: u64,
+    ) -> Result<(usize, usize), sea_orm::DbErr> {
+        use sea_orm::PaginatorTrait;
+        let jobs = BacktestJob::find()
+            .filter(
+                backtest_job::Column::Status
+                    .eq("QUEUED")
+                    .or(backtest_job::Column::Status.eq("RETRY_WAIT")),
+            )
+            .filter(backtest_job::Column::Expression.like("%{%"))
+            .order_by_desc(backtest_job::Column::UpdatedAt)
+            .limit(limit)
+            .all(db)
+            .await?;
+        let total = jobs.len();
+        let mut cleaned = 0usize;
+        for j in jobs {
+            let new_expr = sanitize_expr(&j.expression);
+            if new_expr != j.expression {
+                let now = Utc::now().timestamp();
+                let mut m = BacktestJobActiveModel {
+                    id: Set(j.id),
+                    updated_at: Set(now),
+                    ..Default::default()
+                };
+                m.expression = Set(new_expr);
+                m.update(db).await?;
+                cleaned += 1;
+            }
+        }
+        Ok((total, cleaned))
+    }
 }
 
 #[derive(Debug, Clone, sea_orm::FromQueryResult)]
@@ -406,4 +441,24 @@ pub struct BacktestErrorRow {
     pub updated_at: i64,
     pub expression: String,
     pub last_error_message: Option<String>,
+}
+
+fn sanitize_expr(expr: &str) -> String {
+    let mut out = String::with_capacity(expr.len());
+    let mut skip = false;
+    for ch in expr.chars() {
+        if ch == '{' {
+            skip = true;
+            continue;
+        }
+        if ch == '}' {
+            skip = false;
+            continue;
+        }
+        if !skip {
+            out.push(ch);
+        }
+    }
+    let s = out.replace('\n', " ");
+    s.split_whitespace().collect::<Vec<_>>().join(" ").trim().to_string()
 }

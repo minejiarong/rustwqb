@@ -9,6 +9,9 @@ pub enum AppCommand {
         expr: String,
     },
     BacktestsClear,
+    BacktestsSanitize {
+        limit: usize,
+    },
     AlphasClear,
     GenerateStart {
         model: String,
@@ -102,12 +105,15 @@ impl FromStr for AppCommand {
             "backtest" => {
                 if parts.get(1) == Some(&"clear") {
                     Ok(AppCommand::BacktestsClear)
+                } else if parts.get(1) == Some(&"sanitize") {
+                    let limit = parts.get(2).and_then(|s| s.parse::<usize>().ok()).unwrap_or(5000);
+                    Ok(AppCommand::BacktestsSanitize { limit })
                 } else {
                     let expr = parts[1..].join(" ");
                     if !expr.is_empty() {
                         Ok(AppCommand::Backtest { expr })
                     } else {
-                        Ok(AppCommand::Unknown("用法: backtest <expr> | backtest clear".to_string()))
+                        Ok(AppCommand::Unknown("用法: backtest <expr> | backtest clear | backtest sanitize [limit]".to_string()))
                     }
                 }
             }
