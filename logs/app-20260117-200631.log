@@ -1,4 +1,0 @@
-[2026-01-17T12:06:31Z INFO  rustwqb::storage::connection] Database connection established with WAL mode and table initialized.
-[2026-01-17T12:06:32Z INFO  rustwqb::session::auto_auth_session] <AutoAuthSession []> auth_request(...) [1 tries]
-[2026-01-17T12:06:32Z INFO  rustwqb::backtest::service] 正在执行回测任务恢复程序...
-[2026-01-17T12:06:32Z INFO  rustwqb::backtest::service] 未发现需要恢复的任务

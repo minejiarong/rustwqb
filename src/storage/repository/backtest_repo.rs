@@ -13,6 +13,10 @@ use serde_json::Value;
 pub struct BacktestRepository;
 
 impl BacktestRepository {
+    pub async fn delete_all(db: &DatabaseConnection) -> Result<u64, sea_orm::DbErr> {
+        let res = backtest_job::Entity::delete_many().exec(db).await?;
+        Ok(res.rows_affected)
+    }
     pub async fn create_job(
         db: &DatabaseConnection,
         expression: String,

@@ -1,6 +1,7 @@
 use crate::storage::entity::alpha::{
     self, ActiveModel as AlphaActiveModel, Entity as Alpha, Model as AlphaModel,
 };
+use crate::storage::entity::alpha_field_relation::Entity as AlphaFieldRelation;
 use chrono::Utc;
 use sea_orm::sea_query::Expr;
 use sea_orm::{
@@ -118,6 +119,22 @@ impl AlphaRepository {
             .exec(db)
             .await?;
 
+        Ok(())
+    }
+
+    pub async fn delete_all(db: &DatabaseConnection) -> Result<u64, sea_orm::DbErr> {
+        let res = Alpha::delete_many().exec(db).await?;
+        Ok(res.rows_affected)
+    }
+
+    pub async fn delete_all_relations(db: &DatabaseConnection) -> Result<u64, sea_orm::DbErr> {
+        let res = AlphaFieldRelation::delete_many().exec(db).await?;
+        Ok(res.rows_affected)
+    }
+
+    pub async fn wipe_all(db: &DatabaseConnection) -> Result<(), sea_orm::DbErr> {
+        let _ = Self::delete_all_relations(db).await?;
+        let _ = Self::delete_all(db).await?;
         Ok(())
     }
 

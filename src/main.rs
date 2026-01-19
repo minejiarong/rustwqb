@@ -25,7 +25,7 @@ use crate::app_service::refresh_ui;
 use crate::app_state::{App, AppEvent};
 use crate::commands::AppCommand;
 use crate::storage::entity::Alpha;
-use crate::storage::repository::{AlphaDto, DataFieldRepository};
+use crate::storage::repository::{AlphaDto, AlphaRepository, BacktestRepository, DataFieldRepository};
 use crate::ui::draw;
 
 #[tokio::main(flavor = "multi_thread")]
@@ -239,6 +239,26 @@ async fn main() -> io::Result<()> {
                         let _ = evt_tx_bg.send(AppEvent::Error(
                             "无法回测：未登录或 Session 无效".to_string(),
                         ));
+                    }
+                }
+                AppCommand::AlphasClear => match AlphaRepository::wipe_all(db_bg.as_ref()).await {
+                    Ok(_) => {
+                        let _ = evt_tx_bg
+                            .send(AppEvent::Message("已清空所有 Alpha 及其关系".to_string()));
+                    }
+                    Err(e) => {
+                        let _ = evt_tx_bg.send(AppEvent::Error(format!("清空失败: {}", e)));
+                    }
+                },
+                AppCommand::BacktestsClear => {
+                    match BacktestRepository::delete_all(db_bg.as_ref()).await {
+                        Ok(rows) => {
+                            let _ = evt_tx_bg
+                                .send(AppEvent::Message(format!("已清空回测队列，共 {} 条", rows)));
+                        }
+                        Err(e) => {
+                            let _ = evt_tx_bg.send(AppEvent::Error(format!("回测清空失败: {}", e)));
+                        }
                     }
                 }
                 AppCommand::GenerateStart {
@@ -460,7 +480,7 @@ async fn main() -> io::Result<()> {
                     }
                 }
                 AppCommand::Help => {
-                    let _ = evt_tx_bg.send(AppEvent::Message("可用命令: backtest <expr> | fields sync | fields stats | fields sample [region] [universe] [delay] [n] | generate once <n> [model] [region] [universe] [delay] [sample_size] [auto_backtest] | generate loop <n> <sec> [model] [region] [universe] [delay] [sample_size] [auto_backtest] | generate stop | __INTERNAL_GET_DETAIL__ <expr>".to_string()));
+                    let _ = evt_tx_bg.send(AppEvent::Message("可用命令: backtest <expr> | backtest clear | alphas clear | fields sync | fields stats | fields sample [region] [universe] [delay] [n] | generate once <n> [model] [region] [universe] [delay] [sample_size] [auto_backtest] | generate loop <n> <sec> [model] [region] [universe] [delay] [sample_size] [auto_backtest] | generate stop | __INTERNAL_GET_DETAIL__ <expr>".to_string()));
                 }
                 AppCommand::Quit => {
                     let _ = evt_tx_bg.send(AppEvent::Message("收到退出命令".to_string()));

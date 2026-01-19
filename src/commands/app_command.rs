@@ -8,6 +8,8 @@ pub enum AppCommand {
     Backtest {
         expr: String,
     },
+    BacktestsClear,
+    AlphasClear,
     GenerateStart {
         model: String,
         batch: usize,
@@ -54,6 +56,13 @@ impl FromStr for AppCommand {
         }
 
         match parts[0] {
+            "alpha" | "alphas" => {
+                if parts.get(1) == Some(&"clear") {
+                    Ok(AppCommand::AlphasClear)
+                } else {
+                    Ok(AppCommand::Unknown("用法: alphas clear".to_string()))
+                }
+            }
             "fields" => {
                 if parts.get(1) == Some(&"sync") {
                     Ok(AppCommand::FieldsSync)
@@ -87,11 +96,15 @@ impl FromStr for AppCommand {
                 }
             }
             "backtest" => {
-                let expr = parts[1..].join(" ");
-                if !expr.is_empty() {
-                    Ok(AppCommand::Backtest { expr })
+                if parts.get(1) == Some(&"clear") {
+                    Ok(AppCommand::BacktestsClear)
                 } else {
-                    Ok(AppCommand::Unknown("用法: backtest <expr>".to_string()))
+                    let expr = parts[1..].join(" ");
+                    if !expr.is_empty() {
+                        Ok(AppCommand::Backtest { expr })
+                    } else {
+                        Ok(AppCommand::Unknown("用法: backtest <expr> | backtest clear".to_string()))
+                    }
                 }
             }
             "generate" => {
