@@ -452,6 +452,59 @@ async fn main() -> io::Result<()> {
                         }
                     }
                 }
+                AppCommand::ErrorsExport { limit, path } => {
+                    let dbc = db_bg.clone();
+                    let txc = evt_tx_bg.clone();
+                    tokio::spawn(async move {
+                        let default_path = std::path::PathBuf::from("logs").join("backtest_errors.csv");
+                        let out_path = path
+                            .and_then(|p| {
+                                let pb = std::path::PathBuf::from(p);
+                                Some(pb)
+                            })
+                            .unwrap_or(default_path);
+                        let parent = out_path.parent().map(|p| p.to_path_buf());
+                        if let Some(dir) = parent {
+                            let _ = std::fs::create_dir_all(&dir);
+                        }
+                        match crate::storage::repository::BacktestRepository::list_recent_errors(dbc.as_ref(), limit as u64).await {
+                            Ok(rows) => {
+                                let mut buf = String::new();
+                                buf.push_str("updated_at,expression,error_message\n");
+                                for r in rows.iter() {
+                                    let ts = chrono::NaiveDateTime::from_timestamp_opt(r.updated_at, 0)
+                                        .map(|d| d.format("%Y-%m-%d %H:%M:%S").to_string())
+                                        .unwrap_or_else(|| r.updated_at.to_string());
+                                    let expr = r.expression.replace('\"', "\"\"");
+                                    let msg = r
+                                        .last_error_message
+                                        .as_deref()
+                                        .unwrap_or("")
+                                        .replace('\"', "\"\"");
+                                    buf.push_str(&format!("\"{}\",\"{}\",\"{}\"\n", ts, expr, msg));
+                                }
+                                match std::fs::write(&out_path, buf) {
+                                    Ok(_) => {
+                                        let _ = txc.send(AppEvent::Message(format!(
+                                            "已导出 {} 条回测错误到 {}",
+                                            rows.len(),
+                                            out_path.display()
+                                        )));
+                                    }
+                                    Err(e) => {
+                                        let _ = txc.send(AppEvent::Error(format!(
+                                            "写入导出文件失败: {}",
+                                            e
+                                        )));
+                                    }
+                                }
+                            }
+                            Err(e) => {
+                                let _ = txc.send(AppEvent::Error(format!("查询错误记录失败: {}", e)));
+                            }
+                        }
+                    });
+                }
                 AppCommand::GetDetail { expr } => {
                     match Alpha::find_by_id(expr.clone()).one(db_bg.as_ref()).await {
                         Ok(Some(model)) => {
@@ -480,7 +533,7 @@ async fn main() -> io::Result<()> {
                     }
                 }
                 AppCommand::Help => {
-                    let _ = evt_tx_bg.send(AppEvent::Message("可用命令: backtest <expr> | backtest clear | alphas clear | fields sync | fields stats | fields sample [region] [universe] [delay] [n] | generate once <n> [model] [region] [universe] [delay] [sample_size] [auto_backtest] | generate loop <n> <sec> [model] [region] [universe] [delay] [sample_size] [auto_backtest] | generate stop | __INTERNAL_GET_DETAIL__ <expr>".to_string()));
+                    let _ = evt_tx_bg.send(AppEvent::Message("可用命令: backtest <expr> | backtest clear | alphas clear | fields sync | fields stats | fields sample [region] [universe] [delay] [n] | errors export [limit] [path] | generate once <n> [model] [region] [universe] [delay] [sample_size] [auto_backtest] | generate loop <n> <sec> [model] [region] [universe] [delay] [sample_size] [auto_backtest] | generate stop | __INTERNAL_GET_DETAIL__ <expr>".to_string()));
                 }
                 AppCommand::Quit => {
                     let _ = evt_tx_bg.send(AppEvent::Message("收到退出命令".to_string()));

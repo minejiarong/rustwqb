@@ -3,3 +3,5 @@ generate once 50 gpt-oss-120b CHN TOP2000U 1 300 backtest
 
 generate once 50 qwen-3-235b-a22b-instruct-2507 CHN TOP2000U 1 300 backtest
 generate loop 50 1m gpt-oss-120b CHN TOP2000U 1 300 backtest
+
+generate once 50 gpt-oss-120b CHN TOP2000U 1 300 backtest

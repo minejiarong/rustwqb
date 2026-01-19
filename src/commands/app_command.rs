@@ -43,6 +43,10 @@ pub enum AppCommand {
         delay: Option<i32>,
         n: usize,
     },
+    ErrorsExport {
+        limit: usize,
+        path: Option<String>,
+    },
     Unknown(String),
 }
 
@@ -197,6 +201,15 @@ impl FromStr for AppCommand {
                     }
                     Some(n_str) => Ok(AppCommand::Unknown(format!("未知的 generate 子命令: {}", n_str))),
                     None => Ok(AppCommand::Unknown("用法: generate loop <n> <sec> [model] [region] [universe] [delay] [sample_size] [auto_backtest] | generate once <n> [model] [region] [universe] [delay] [sample_size] [auto_backtest] | generate stop".to_string())),
+                }
+            }
+            "errors" => {
+                if parts.get(1) == Some(&"export") {
+                    let limit = parts.get(2).and_then(|s| s.parse::<usize>().ok()).unwrap_or(1000);
+                    let path = parts.get(3).map(|s| s.to_string());
+                    Ok(AppCommand::ErrorsExport { limit, path })
+                } else {
+                    Ok(AppCommand::Unknown("用法: errors export [limit] [path]".to_string()))
                 }
             }
             "__INTERNAL_GET_DETAIL__" => {

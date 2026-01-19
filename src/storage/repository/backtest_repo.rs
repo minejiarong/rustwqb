@@ -381,4 +381,29 @@ impl BacktestRepository {
             error_exceeded,
         })
     }
+
+    pub async fn list_recent_errors(
+        db: &DatabaseConnection,
+        limit: u64,
+    ) -> Result<Vec<BacktestErrorRow>, sea_orm::DbErr> {
+        use sea_orm::FromQueryResult;
+        BacktestJob::find()
+            .filter(backtest_job::Column::LastErrorMessage.is_not_null())
+            .order_by_desc(backtest_job::Column::UpdatedAt)
+            .select_only()
+            .column(backtest_job::Column::UpdatedAt)
+            .column(backtest_job::Column::Expression)
+            .column(backtest_job::Column::LastErrorMessage)
+            .limit(limit)
+            .into_model::<BacktestErrorRow>()
+            .all(db)
+            .await
+    }
+}
+
+#[derive(Debug, Clone, sea_orm::FromQueryResult)]
+pub struct BacktestErrorRow {
+    pub updated_at: i64,
+    pub expression: String,
+    pub last_error_message: Option<String>,
 }
