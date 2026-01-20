@@ -53,26 +53,51 @@ pub fn validate_prequeue(expr: &str) -> Result<(), String> {
                 let start = pos + idx + "winsorize(".len();
                 let bytes = s.as_bytes();
                 let mut depth = 1i32;
-                let mut comma_count = 0usize;
                 let mut i = start;
+                let mut segs: Vec<(usize, usize)> = Vec::new();
+                let mut seg_start = start;
                 while i < bytes.len() && depth > 0 {
                     let ch = bytes[i];
                     if ch == b'(' {
                         depth += 1;
                     } else if ch == b')' {
                         depth -= 1;
+                        if depth == 0 {
+                            segs.push((seg_start, i));
+                            break;
+                        }
                     } else if ch == b',' && depth == 1 {
-                        comma_count += 1;
+                        segs.push((seg_start, i));
+                        seg_start = i + 1;
                     }
                     i += 1;
                 }
-                if comma_count > 0 {
+                let mut positional = 0usize;
+                for (a, b) in segs {
+                    let seg = s[a..b].trim();
+                    if seg.is_empty() {
+                        continue;
+                    }
+                    let mut d = 0i32;
+                    let mut is_named = false;
+                    for ch in seg.chars() {
+                        if ch == '(' {
+                            d += 1;
+                        } else if ch == ')' {
+                            d -= 1;
+                        } else if ch == '=' && d == 0 {
+                            is_named = true;
+                            break;
+                        }
+                    }
+                    if !is_named {
+                        positional += 1;
+                    }
+                }
+                if positional > 1 {
                     return Err("winsorize_arity".to_string());
                 }
-                pos = start.min(lower.len());
-                if pos >= lower.len() {
-                    break;
-                }
+                pos = (i + 1).min(lower.len());
             } else {
                 break;
             }
