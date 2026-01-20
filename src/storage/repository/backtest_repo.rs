@@ -93,12 +93,13 @@ impl BacktestRepository {
 
     pub async fn cleanup_invalid_queued_jobs(
         db: &DatabaseConnection,
-    ) -> Result<usize, sea_orm::DbErr> {
+    ) -> Result<(usize, Vec<String>), sea_orm::DbErr> {
         let jobs = BacktestJob::find()
             .filter(backtest_job::Column::Status.eq("QUEUED"))
             .all(db)
             .await?;
         let mut deleted = 0usize;
+        let mut samples = Vec::new();
         for job in jobs {
             let incompatible = matches!(
                 DataFieldRepository::validate_event_operator_compatibility(
@@ -117,9 +118,12 @@ impl BacktestRepository {
                     .exec(db)
                     .await?;
                 deleted += 1;
+                if samples.len() < 5 {
+                    samples.push(job.expression.clone());
+                }
             }
         }
-        Ok(deleted)
+        Ok((deleted, samples))
     }
 
     pub async fn get_pending_jobs(

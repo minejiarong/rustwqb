@@ -215,13 +215,34 @@ impl BacktestService {
                         None,
                     )
                     .await;
+                    let _ = evt_tx.send(AppEvent::Log(format!(
+                        "🔄 信息更新：标记事件字段 {} (region={}, universe={})",
+                        &fields[0], &job.region, &job.universe
+                    )));
                     let ops = crate::generate::parser::extract_operators(&job.expression);
-                    for op in ops {
+                    for op in &ops {
                         let _ = OperatorCompatRepository::mark_incompatible(db.as_ref(), &op).await;
                     }
-                    if let Ok(n) = BacktestRepository::cleanup_invalid_queued_jobs(db.as_ref()).await {
-                        let _ = evt_tx
-                            .send(AppEvent::Log(format!("清理不兼容入队任务: {}", n)));
+                    if !ops.is_empty() {
+                        let preview: Vec<String> = ops.iter().take(10).cloned().collect();
+                        let joined = preview.join(", ");
+                        let _ = evt_tx.send(AppEvent::Log(format!(
+                            "🔄 信息更新：记录不兼容运算符: {}",
+                            joined
+                        )));
+                    }
+                    if let Ok((n, samples)) =
+                        BacktestRepository::cleanup_invalid_queued_jobs(db.as_ref()).await
+                    {
+                        if n > 0 {
+                            let joined = samples.join(" | ");
+                            let _ = evt_tx.send(AppEvent::Log(format!(
+                                "🧹 队列清理：删除 {} 条不兼容任务，示例: {}",
+                                n, joined
+                            )));
+                        } else {
+                            let _ = evt_tx.send(AppEvent::Log("🧹 队列清理：无不兼容任务".to_string()));
+                        }
                     }
                 }
             }

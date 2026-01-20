@@ -101,6 +101,14 @@ impl<P: LlmProvider + Clone + Send + Sync + 'static> GeneratorService<P> {
             .unwrap_or_default();
         let mut incompatible_ops: Vec<String> = incompatible_ops_set.into_iter().collect();
         incompatible_ops.sort();
+        if !event_fields.is_empty() && !incompatible_ops.is_empty() {
+            let preview: Vec<String> = incompatible_ops.iter().take(10).cloned().collect();
+            let joined = preview.join(", ");
+            let _ = self.evt_tx.send(AppEvent::Log(format!(
+                "🔄 信息更新：EVENT 字段禁止使用的运算符列表: {}",
+                joined
+            )));
+        }
         let prompt = pb.build_with_field_groups(
             cfg.batch_size,
             &non_event_fields,
