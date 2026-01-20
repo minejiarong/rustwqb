@@ -39,7 +39,7 @@ impl WQBSession {
             ),
         );
 
-        let mut session = AutoAuthSession::new(
+        let session = AutoAuthSession::new(
             "POST".to_string(),
             URL_AUTHENTICATION.to_string(),
             auth_expected,
@@ -48,8 +48,8 @@ impl WQBSession {
             expected,
             3,
             2.0,
+            auth_kwargs,
         );
-        session.set_auth_kwargs(auth_kwargs);
 
         Self {
             session,
@@ -64,7 +64,7 @@ impl WQBSession {
     }
 
     /// 设置认证信息
-    pub fn set_auth(&mut self, email: String, password: String) {
+    pub async fn set_auth(&mut self, email: String, password: String) {
         self.email = email.clone();
         self.password = password.clone();
         let mut auth_kwargs = HashMap::new();
@@ -75,7 +75,7 @@ impl WQBSession {
                 base64::engine::general_purpose::STANDARD.encode(format!("{}:{}", email, password))
             ),
         );
-        self.session.set_auth_kwargs(auth_kwargs);
+        self.session.set_auth_kwargs(auth_kwargs).await;
     }
 
     /// 执行认证请求（用于测试连接）
