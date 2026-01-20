@@ -6,6 +6,81 @@ pub struct ParsedResult {
     pub rejected_examples: Vec<String>,
 }
 
+pub fn validate_prequeue(expr: &str) -> Result<(), String> {
+    let s = expr.trim();
+    {
+        let bytes = s.as_bytes();
+        let mut i = 0usize;
+        while i + 1 < bytes.len() {
+            if bytes[i] == b')' {
+                let mut j = i + 1;
+                while j < bytes.len() && bytes[j].is_ascii_whitespace() {
+                    j += 1;
+                }
+                if j < bytes.len() && bytes[j] == b'(' {
+                    return Err("unexpected_right_paren".to_string());
+                }
+            }
+            i += 1;
+        }
+    }
+    {
+        let bytes = s.as_bytes();
+        let mut depth = 0i32;
+        let mut i = 0usize;
+        while i < bytes.len() {
+            let ch = bytes[i];
+            if ch == b'(' {
+                depth += 1;
+            } else if ch == b')' {
+                let mut k = i;
+                while k > 0 && bytes[k - 1].is_ascii_whitespace() {
+                    k -= 1;
+                }
+                if k > 0 && bytes[k - 1] == b',' {
+                    return Err("trailing_comma".to_string());
+                }
+                depth -= 1;
+            }
+            i += 1;
+        }
+    }
+    {
+        let lower = s.to_ascii_lowercase();
+        let mut pos = 0usize;
+        loop {
+            if let Some(idx) = lower[pos..].find("winsorize(") {
+                let start = pos + idx + "winsorize(".len();
+                let bytes = s.as_bytes();
+                let mut depth = 1i32;
+                let mut comma_count = 0usize;
+                let mut i = start;
+                while i < bytes.len() && depth > 0 {
+                    let ch = bytes[i];
+                    if ch == b'(' {
+                        depth += 1;
+                    } else if ch == b')' {
+                        depth -= 1;
+                    } else if ch == b',' && depth == 1 {
+                        comma_count += 1;
+                    }
+                    i += 1;
+                }
+                if comma_count > 0 {
+                    return Err("winsorize_arity".to_string());
+                }
+                pos = start.min(lower.len());
+                if pos >= lower.len() {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+    }
+    Ok(())
+}
+
 pub fn sanitize_expression(expr: &str) -> String {
     let re = Regex::new(r"\{[^}]*\}").unwrap();
     let s = re.replace_all(expr, "");

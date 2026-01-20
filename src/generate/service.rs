@@ -1,6 +1,6 @@
 use crate::ai::{ChatRequest, LlmError, LlmProvider};
 use crate::generate::context::GenerateContextProvider;
-use crate::generate::parser::parse_alpha_exprs;
+use crate::generate::parser::{parse_alpha_exprs, validate_prequeue};
 use crate::generate::prompt::PromptBuilder;
 use crate::session::WQBSession;
 use crate::storage::repository::DataFieldRepository;
@@ -162,6 +162,16 @@ impl<P: LlmProvider + Clone + Send + Sync + 'static> GeneratorService<P> {
         if cfg.auto_backtest {
             let mut queued = 0usize;
             for expression in &accepted {
+                if let Err(reason) = validate_prequeue(expression) {
+                    let msg = match reason.as_str() {
+                        "unexpected_right_paren" => "预提交校验失败：存在意外右括号（形如 ...)(...）",
+                        "trailing_comma" => "预提交校验失败：存在拖尾逗号（形如 ...,)）",
+                        "winsorize_arity" => "预提交校验失败：winsorize 仅接受 1 个输入参数",
+                        _ => "预提交校验失败：表达式不符合入队规则",
+                    };
+                    let _ = self.evt_tx.send(AppEvent::Log(format!("跳过入队：{} => {}", expression, msg)));
+                    continue;
+                }
                 if let Some(_) = BacktestRepository::create_job(
                     self.db.as_ref(),
                     expression.clone(),

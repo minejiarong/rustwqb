@@ -9,6 +9,16 @@ pub async fn run(
     evt_tx: mpsc::UnboundedSender<AppEvent>,
 ) {
     let sanitized = crate::generate::parser::sanitize_expression(expression);
+    if let Err(reason) = crate::generate::parser::validate_prequeue(&sanitized) {
+        let msg = match reason.as_str() {
+            "unexpected_right_paren" => "预提交校验失败：存在意外右括号（形如 ...)(...）",
+            "trailing_comma" => "预提交校验失败：存在拖尾逗号（形如 ...,)）",
+            "winsorize_arity" => "预提交校验失败：winsorize 仅接受 1 个输入参数",
+            _ => "预提交校验失败：表达式不符合入队规则",
+        };
+        let _ = evt_tx.send(AppEvent::Error(msg.to_string()));
+        return;
+    }
     let _ = evt_tx.send(AppEvent::Log(format!("正在提交回测任务: {}", sanitized)));
 
     // 1. 先在 alphas 主表中占位（使用默认回测设置）
