@@ -113,7 +113,15 @@ impl PromptBuilder {
         universe: Option<&str>,
         delay: Option<i32>,
     ) -> String {
-        self.build_with_field_groups(n, fields, &[] as &[String], region, universe, delay)
+        self.build_with_field_groups(
+            n,
+            fields,
+            &[] as &[String],
+            region,
+            universe,
+            delay,
+            &[] as &[String],
+        )
     }
 
     pub fn build_with_field_groups(
@@ -124,6 +132,7 @@ impl PromptBuilder {
         region: Option<&str>,
         universe: Option<&str>,
         delay: Option<i32>,
+        incompatible_ops: &[String],
     ) -> String {
         let mut lines = Vec::new();
         lines.push(format!(
@@ -170,6 +179,16 @@ impl PromptBuilder {
                 lines.push(format!("EVENT: ({})", joined));
             }
 
+            lines.push("".to_string());
+        }
+
+        if !event_fields.is_empty() && !incompatible_ops.is_empty() {
+            let preview: Vec<&String> = incompatible_ops.iter().take(50).collect();
+            let joined = preview.iter().map(|s| s.as_str()).collect::<Vec<_>>().join(", ");
+            lines.push(format!(
+                "IMPORTANT: Do NOT use these operators with EVENT fields: {}",
+                joined
+            ));
             lines.push("".to_string());
         }
 

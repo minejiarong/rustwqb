@@ -1,7 +1,9 @@
 use crate::backtest::model::{BacktestError, BacktestResult};
 use crate::backtest::worker::BacktestWorker;
 use crate::session::WQBSession;
-use crate::storage::repository::{AlphaRepository, BacktestRepository};
+use crate::storage::repository::{
+    AlphaRepository, BacktestRepository, DataFieldRepository, OperatorCompatRepository,
+};
 use crate::AppEvent;
 use log::{error, info, warn};
 use sea_orm::{DatabaseConnection, EntityTrait};
@@ -201,6 +203,28 @@ impl BacktestService {
             .await;
 
             let _ = AlphaRepository::mark_error(db.as_ref(), &job.expression, &err.message).await;
+            if let Ok(fields) =
+                DataFieldRepository::extract_used_fields(db.as_ref(), &job.expression).await
+            {
+                if fields.len() == 1 {
+                    let _ = DataFieldRepository::mark_field_event(
+                        db.as_ref(),
+                        &fields[0],
+                        &job.region,
+                        &job.universe,
+                        None,
+                    )
+                    .await;
+                    let ops = crate::generate::parser::extract_operators(&job.expression);
+                    for op in ops {
+                        let _ = OperatorCompatRepository::mark_incompatible(db.as_ref(), &op).await;
+                    }
+                    if let Ok(n) = BacktestRepository::cleanup_invalid_queued_jobs(db.as_ref()).await {
+                        let _ = evt_tx
+                            .send(AppEvent::Log(format!("清理不兼容入队任务: {}", n)));
+                    }
+                }
+            }
             let _ = evt_tx.send(AppEvent::Log(format!("✗ 回测最终失败: {}", err.message)));
         }
     }

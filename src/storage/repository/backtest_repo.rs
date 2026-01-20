@@ -9,6 +9,7 @@ use sea_orm::{
 };
 use sea_orm::{ConnectionTrait, Statement};
 use serde_json::Value;
+use crate::storage::repository::data_field_repo::{EventOpValidationErr, DataFieldRepository};
 
 pub struct BacktestRepository;
 
@@ -88,6 +89,37 @@ impl BacktestRepository {
 
         update.update(db).await?;
         Ok(())
+    }
+
+    pub async fn cleanup_invalid_queued_jobs(
+        db: &DatabaseConnection,
+    ) -> Result<usize, sea_orm::DbErr> {
+        let jobs = BacktestJob::find()
+            .filter(backtest_job::Column::Status.eq("QUEUED"))
+            .all(db)
+            .await?;
+        let mut deleted = 0usize;
+        for job in jobs {
+            let incompatible = matches!(
+                DataFieldRepository::validate_event_operator_compatibility(
+                    db,
+                    &job.expression,
+                    Some(&job.region),
+                    Some(&job.universe),
+                    None
+                )
+                .await,
+                Err(EventOpValidationErr::Incompatible)
+            );
+            if incompatible {
+                let _ = backtest_job::Entity::delete_many()
+                    .filter(backtest_job::Column::Id.eq(job.id))
+                    .exec(db)
+                    .await?;
+                deleted += 1;
+            }
+        }
+        Ok(deleted)
     }
 
     pub async fn get_pending_jobs(

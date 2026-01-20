@@ -19,6 +19,21 @@ pub async fn run(
         let _ = evt_tx.send(AppEvent::Error(msg.to_string()));
         return;
     }
+    if let Err(crate::storage::repository::data_field_repo::EventOpValidationErr::Incompatible) =
+        crate::storage::repository::DataFieldRepository::validate_event_operator_compatibility(
+            db,
+            &sanitized,
+            Some("CHN"),
+            Some("TOP2000U"),
+            Some(1),
+        )
+        .await
+    {
+        let _ = evt_tx.send(AppEvent::Error(
+            "预提交校验失败：事件字段与不兼容运算符组合".to_string(),
+        ));
+        return;
+    }
     let _ = evt_tx.send(AppEvent::Log(format!("正在提交回测任务: {}", sanitized)));
 
     // 1. 先在 alphas 主表中占位（使用默认回测设置）

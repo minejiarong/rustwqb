@@ -182,3 +182,39 @@ fn paren_balanced(s: &str) -> bool {
     }
     depth == 0
 }
+
+pub fn extract_operators(expr: &str) -> Vec<String> {
+    let s = expr.trim();
+    let bytes = s.as_bytes();
+    let mut ops = Vec::new();
+    let mut i = 0usize;
+    while i < bytes.len() {
+        if is_ident_start(bytes[i]) {
+            let start = i;
+            i += 1;
+            while i < bytes.len() && is_ident_continue(bytes[i]) {
+                i += 1;
+            }
+            let end = i;
+            while i < bytes.len() && bytes[i].is_ascii_whitespace() {
+                i += 1;
+            }
+            if i < bytes.len() && bytes[i] == b'(' {
+                let name = &s[start..end];
+                if name != "ALPHA_EXPR" {
+                    ops.push(name.to_string());
+                }
+            }
+        } else {
+            i += 1;
+        }
+    }
+    ops
+}
+
+fn is_ident_start(b: u8) -> bool {
+    (b'A'..=b'Z').contains(&b) || (b'a'..=b'z').contains(&b) || b == b'_'
+}
+fn is_ident_continue(b: u8) -> bool {
+    is_ident_start(b) || (b'0'..=b'9').contains(&b)
+}

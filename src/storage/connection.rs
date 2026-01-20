@@ -80,6 +80,9 @@ pub async fn establish_connection(db_url: &str) -> Result<DatabaseConnection, Db
     )
     .await?;
 
+    ensure_data_field_scopes_columns(&db).await?;
+    ensure_operator_event_compat_table(&db).await?;
+
     info!("Database connection established with WAL mode and table initialized.");
 
     Ok(db)
@@ -121,5 +124,53 @@ async fn ensure_backtest_jobs_columns(db: &DatabaseConnection) -> Result<(), DbE
         .await?;
     }
 
+    Ok(())
+}
+
+async fn ensure_data_field_scopes_columns(db: &DatabaseConnection) -> Result<(), DbErr> {
+    let backend = db.get_database_backend();
+    if backend != sea_orm::DatabaseBackend::Sqlite {
+        return Ok(());
+    }
+    let rows = db
+        .query_all(sea_orm::Statement::from_string(
+            backend,
+            "PRAGMA table_info(data_field_scopes);".to_string(),
+        ))
+        .await?;
+    let mut cols = std::collections::HashSet::new();
+    for row in rows {
+        if let Ok(name) = row.try_get::<String>("", "name") {
+            cols.insert(name);
+        }
+    }
+    if !cols.contains("is_event") {
+        db.execute(sea_orm::Statement::from_string(
+            backend,
+            "ALTER TABLE data_field_scopes ADD COLUMN is_event INTEGER NOT NULL DEFAULT 0;"
+                .to_string(),
+        ))
+        .await?;
+    }
+    Ok(())
+}
+
+async fn ensure_operator_event_compat_table(db: &DatabaseConnection) -> Result<(), DbErr> {
+    let backend = db.get_database_backend();
+    if backend != sea_orm::DatabaseBackend::Sqlite {
+        return Ok(());
+    }
+    db.execute(sea_orm::Statement::from_string(
+        backend,
+        "CREATE TABLE IF NOT EXISTS operator_event_compats (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            operator_name TEXT NOT NULL UNIQUE,
+            supports_event INTEGER NOT NULL DEFAULT 0,
+            created_at INTEGER NOT NULL,
+            updated_at INTEGER NOT NULL
+        );"
+        .to_string(),
+    ))
+    .await?;
     Ok(())
 }

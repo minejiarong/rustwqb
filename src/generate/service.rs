@@ -93,6 +93,14 @@ impl<P: LlmProvider + Clone + Send + Sync + 'static> GeneratorService<P> {
             cfg.field_sample_size,
         )
         .await?;
+        let incompatible_ops_set =
+            crate::storage::repository::OperatorCompatRepository::list_incompatible_ops(
+                self.db.as_ref(),
+            )
+            .await
+            .unwrap_or_default();
+        let mut incompatible_ops: Vec<String> = incompatible_ops_set.into_iter().collect();
+        incompatible_ops.sort();
         let prompt = pb.build_with_field_groups(
             cfg.batch_size,
             &non_event_fields,
@@ -100,6 +108,7 @@ impl<P: LlmProvider + Clone + Send + Sync + 'static> GeneratorService<P> {
             cfg.region.as_deref(),
             cfg.universe.as_deref(),
             cfg.delay,
+            &incompatible_ops,
         );
 
         let req = ChatRequest {
@@ -170,6 +179,22 @@ impl<P: LlmProvider + Clone + Send + Sync + 'static> GeneratorService<P> {
                         _ => "预提交校验失败：表达式不符合入队规则",
                     };
                     let _ = self.evt_tx.send(AppEvent::Log(format!("跳过入队：{} => {}", expression, msg)));
+                    continue;
+                }
+                if let Err(crate::storage::repository::data_field_repo::EventOpValidationErr::Incompatible) =
+                    DataFieldRepository::validate_event_operator_compatibility(
+                        self.db.as_ref(),
+                        expression,
+                        cfg.region.as_deref(),
+                        cfg.universe.as_deref(),
+                        cfg.delay,
+                    )
+                    .await
+                {
+                    let _ = self.evt_tx.send(AppEvent::Log(format!(
+                        "跳过入队：{} => 预提交校验失败：事件字段与不兼容运算符组合",
+                        expression
+                    )));
                     continue;
                 }
                 if let Some(_) = BacktestRepository::create_job(

@@ -33,6 +33,17 @@ pub struct FieldFreqRow {
     pub freq: i64,
 }
 
+#[derive(Debug, Clone, FromQueryResult)]
+pub struct FieldEventFlag {
+    pub field_id: String,
+    pub is_event: i64,
+}
+
+#[derive(Debug)]
+pub enum EventOpValidationErr {
+    Incompatible,
+}
+
 impl DataFieldRepository {
     pub async fn upsert_batch(
         db: &DatabaseConnection,
@@ -163,6 +174,7 @@ impl DataFieldRepository {
                     region: Set(e.region.clone()),
                     universe: Set(e.universe.clone()),
                     delay: Set(e.delay),
+                    is_event: Set(false),
                     created_at: Set(now),
                     updated_at: Set(now),
                 };
@@ -171,6 +183,50 @@ impl DataFieldRepository {
             }
         }
         Ok(inserted)
+    }
+
+    pub async fn mark_field_event(
+        db: &DatabaseConnection,
+        field_id: &str,
+        region: &str,
+        universe: &str,
+        delay: Option<i32>,
+    ) -> Result<u64, sea_orm::DbErr> {
+        let now = Utc::now().timestamp();
+        let mut query = DataFieldScope::update_many()
+            .col_expr(DataFieldScopeColumn::IsEvent, Expr::value(1))
+            .col_expr(DataFieldScopeColumn::UpdatedAt, Expr::value(now))
+            .filter(DataFieldScopeColumn::FieldId.eq(field_id.to_string()))
+            .filter(DataFieldScopeColumn::Region.eq(region.to_string()))
+            .filter(DataFieldScopeColumn::Universe.eq(universe.to_string()));
+        if let Some(d) = delay {
+            query = query.filter(DataFieldScopeColumn::Delay.eq(d));
+        }
+        let res = query.exec(db).await?;
+        Ok(res.rows_affected)
+    }
+
+    pub async fn is_event_scope(
+        db: &DatabaseConnection,
+        field_id: &str,
+        region: Option<&str>,
+        universe: Option<&str>,
+        delay: Option<i32>,
+    ) -> Result<bool, sea_orm::DbErr> {
+        let mut query = DataFieldScope::find()
+            .filter(DataFieldScopeColumn::FieldId.eq(field_id.to_string()))
+            .filter(DataFieldScopeColumn::IsEvent.eq(true));
+        if let Some(r) = region {
+            query = query.filter(DataFieldScopeColumn::Region.eq(r.to_string()));
+        }
+        if let Some(u) = universe {
+            query = query.filter(DataFieldScopeColumn::Universe.eq(u.to_string()));
+        }
+        if let Some(d) = delay {
+            query = query.filter(DataFieldScopeColumn::Delay.eq(d));
+        }
+        let exists = query.one(db).await?.is_some();
+        Ok(exists)
     }
 
     pub async fn sample_weighted_fields(
@@ -227,26 +283,38 @@ impl DataFieldRepository {
         delay: Option<i32>,
         n: usize,
     ) -> Result<(Vec<String>, Vec<String>), sea_orm::DbErr> {
-        let ids = Self::sample_weighted_fields(db, region, universe, delay, n).await?;
+        let ids =
+            Self::sample_weighted_fields(db, region.clone(), universe.clone(), delay, n).await?;
         if ids.is_empty() {
             return Ok((Vec::new(), Vec::new()));
         }
 
-        let models: Vec<DataFieldModel> = DataField::find()
-            .filter(DataFieldColumn::FieldId.is_in(ids.clone()))
-            .all(db)
-            .await?;
-
-        let mut by_id: HashMap<String, DataFieldModel> = HashMap::with_capacity(models.len());
-        for m in models {
-            by_id.insert(m.field_id.clone(), m);
+        let mut query = DataFieldScope::find()
+            .select_only()
+            .column(DataFieldScopeColumn::FieldId)
+            .column_as(Expr::cust("MAX(is_event)"), "is_event")
+            .filter(DataFieldScopeColumn::FieldId.is_in(ids.clone()))
+            .group_by(DataFieldScopeColumn::FieldId);
+        if let Some(r) = region.as_ref() {
+            query = query.filter(DataFieldScopeColumn::Region.eq(r.clone()));
+        }
+        if let Some(u) = universe.as_ref() {
+            query = query.filter(DataFieldScopeColumn::Universe.eq(u.clone()));
+        }
+        if let Some(d) = delay {
+            query = query.filter(DataFieldScopeColumn::Delay.eq(d));
+        }
+        let flags = query.into_model::<FieldEventFlag>().all(db).await?;
+        let mut is_event_map: HashMap<String, bool> = HashMap::new();
+        for f in flags {
+            is_event_map.insert(f.field_id.clone(), f.is_event != 0);
         }
 
         let mut normal = Vec::new();
         let mut event = Vec::new();
 
         for id in ids {
-            let is_event = by_id.get(&id).map(is_event_field).unwrap_or(false);
+            let is_event = is_event_map.get(&id).copied().unwrap_or(false);
             if is_event {
                 event.push(id);
             } else {
@@ -256,15 +324,69 @@ impl DataFieldRepository {
 
         Ok((normal, event))
     }
-}
 
-fn is_event_field(m: &DataFieldModel) -> bool {
-    let mut s = String::new();
-    s.push_str(&m.dataset_name);
-    s.push(' ');
-    s.push_str(&m.category_name);
-    s.push(' ');
-    s.push_str(&m.subcategory_name);
-    let hay = s.to_ascii_lowercase();
-    hay.contains("news") || hay.contains("event")
+    pub async fn extract_used_fields(
+        db: &DatabaseConnection,
+        expression: &str,
+    ) -> Result<Vec<String>, sea_orm::DbErr> {
+        let mut tokens = Vec::new();
+        let mut cur = String::new();
+        for ch in expression.chars() {
+            if ch.is_ascii_alphanumeric() || ch == '_' {
+                cur.push(ch);
+            } else {
+                if !cur.is_empty() {
+                    tokens.push(cur.clone());
+                    cur.clear();
+                }
+            }
+        }
+        if !cur.is_empty() {
+            tokens.push(cur);
+        }
+        if tokens.is_empty() {
+            return Ok(Vec::new());
+        }
+        let rows: Vec<DataFieldModel> = DataField::find()
+            .filter(DataFieldColumn::FieldId.is_in(tokens.clone()))
+            .all(db)
+            .await?;
+        Ok(rows.into_iter().map(|m| m.field_id).collect())
+    }
+
+    pub async fn validate_event_operator_compatibility(
+        db: &DatabaseConnection,
+        expression: &str,
+        region: Option<&str>,
+        universe: Option<&str>,
+        delay: Option<i32>,
+    ) -> Result<(), EventOpValidationErr> {
+        let fields = Self::extract_used_fields(db, expression)
+            .await
+            .unwrap_or_default();
+        if fields.is_empty() {
+            return Ok(());
+        }
+        let mut has_event = false;
+        for fid in &fields {
+            if Self::is_event_scope(db, fid, region, universe, delay)
+                .await
+                .unwrap_or(false)
+            {
+                has_event = true;
+                break;
+            }
+        }
+        if !has_event {
+            return Ok(());
+        }
+        let ops = crate::generate::parser::extract_operators(expression);
+        let incompatible = crate::storage::repository::operator_compat_repo::OperatorCompatRepository::list_incompatible_ops(db)
+            .await
+            .unwrap_or_default();
+        if ops.iter().any(|op| incompatible.contains(op)) {
+            return Err(EventOpValidationErr::Incompatible);
+        }
+        Ok(())
+    }
 }
