@@ -22,6 +22,7 @@ impl PromptBuilder {
         lines.push("No markdown, no explanations.".to_string());
         lines.push("Do NOT include any curly braces {} or annotations.".to_string());
         lines.push("Do NOT append trailing markers like {CR}, {…}, comments or metadata.".to_string());
+        lines.push("Do NOT use any operators starting with 'reduce_' (e.g., reduce_norm, reduce_sum, etc.).".to_string());
         lines.push("".to_string());
         lines.push(
             "Example format (use placeholders; do NOT reuse placeholders as real fields):"
@@ -245,11 +246,7 @@ impl PromptBuilder {
 
 fn is_banned(name: &str) -> bool {
     let n = name.to_ascii_lowercase();
-    n == "reduce_ir"
-        || n == "reduce_avg"
-        || n == "reduce_max"
-        || n == "reduce_sum"
-        || n == "reduce_min"
+    n.starts_with("reduce_")
 }
 
 fn scope_abbr(scope: &[String]) -> String {

@@ -50,6 +50,12 @@ pub fn parse_alpha_exprs(text: &str) -> ParsedResult {
             }
             continue;
         }
+        if expr.to_ascii_lowercase().contains("reduce_") {
+            if rejected.len() < 5 {
+                rejected.push(format!("banned_op: {expr}"));
+            }
+            continue;
+        }
         out.push(expr.to_string());
     }
 
