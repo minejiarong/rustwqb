@@ -130,10 +130,11 @@ impl FromStr for AppCommand {
                             .unwrap_or_else(|_| "openrouter".to_string())
                             .to_lowercase();
                         let mut idx = 4usize;
-                        let mut model = if provider == "cerebras" {
-                            "llama-3.3-70b".to_string()
-                        } else {
-                            "deepseek/deepseek-r1".to_string()
+                        let mut model = match provider.as_str() {
+                            "cerebras" => "llama-3.3-70b".to_string(),
+                            "xirang" => std::env::var("XIRANG_MODEL_ID")
+                                .unwrap_or_else(|_| "ff3f5c450f3b459cbe5d04a5ea9b2511".to_string()),
+                            _ => "deepseek/deepseek-r1".to_string(),
                         };
                         if let Some(tok) = parts.get(idx) {
                             let t = tok.to_string();
@@ -171,10 +172,11 @@ impl FromStr for AppCommand {
                             .unwrap_or_else(|_| "openrouter".to_string())
                             .to_lowercase();
                         let mut idx = 3usize;
-                        let mut model = if provider == "cerebras" {
-                            "llama-3.3-70b".to_string()
-                        } else {
-                            "deepseek/deepseek-r1".to_string()
+                        let mut model = match provider.as_str() {
+                            "cerebras" => "llama-3.3-70b".to_string(),
+                            "xirang" => std::env::var("XIRANG_MODEL_ID")
+                                .unwrap_or_else(|_| "ff3f5c450f3b459cbe5d04a5ea9b2511".to_string()),
+                            _ => "deepseek/deepseek-r1".to_string(),
                         };
                         if let Some(tok) = parts.get(idx) {
                             let t = tok.to_string();

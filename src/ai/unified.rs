@@ -1,12 +1,14 @@
 use crate::ai::cerebras::CerebrasProvider;
 use crate::ai::types::{ChatRequest, ChatResponse, LlmError, LlmProvider};
 use crate::ai::OpenRouterProvider;
+use crate::ai::XirangProvider;
 use async_trait::async_trait;
 
 #[derive(Clone)]
 pub enum InnerProvider {
     OpenRouter(OpenRouterProvider),
     Cerebras(CerebrasProvider),
+    Xirang(XirangProvider),
 }
 
 #[derive(Clone)]
@@ -26,6 +28,12 @@ impl AnyProvider {
                     inner: InnerProvider::Cerebras(p),
                 })
             }
+            "xirang" => {
+                let p = XirangProvider::from_env()?;
+                Ok(Self {
+                    inner: InnerProvider::Xirang(p),
+                })
+            }
             _ => {
                 let p = OpenRouterProvider::from_env()?;
                 Ok(Self {
@@ -42,6 +50,7 @@ impl LlmProvider for AnyProvider {
         match &self.inner {
             InnerProvider::OpenRouter(p) => p.chat(req).await,
             InnerProvider::Cerebras(p) => p.chat(req).await,
+            InnerProvider::Xirang(p) => p.chat(req).await,
         }
     }
 }

@@ -7,3 +7,8 @@ generate loop 50 1m gpt-oss-120b CHN TOP2000U 1 300 backtest
 generate once 50 gpt-oss-120b CHN TOP2000U 1 300 backtest
 sing-box run -c config.json 
 generate loop 50 1m qwen-3-235b-a22b-instruct-2507 CHN TOP2000U 1 300 backtest
+generate loop 50 1m zai-glm-4.7 CHN TOP2000U 1 100 backtest
+generate loop 50  20 DeepSeek-R1-0528 CHN TOP2000U 1 300 backtest 
+
+generate once 50 ff3f5c450f3b459cbe5d04a5ea9b2511 CHN TOP2000U 1 300 backtest
+LLM_PROXY=socks5h://127.0.0.1:7890

@@ -134,6 +134,7 @@ impl<P: LlmProvider + Clone + Send + Sync + 'static> GeneratorService<P> {
                     std::env::var("LLM_PROVIDER").unwrap_or_else(|_| "openrouter".to_string());
                 let msg = match provider.to_ascii_lowercase().as_str() {
                     "cerebras" => "AI 未授权：请在 .env 设置 CEREBRAS_API_KEY（可选 CEREBRAS_BASE_URL），或切换 LLM_PROVIDER=openrouter 并设置 OPENROUTER_API_KEY",
+                    "xirang" => "AI 未授权：请在 .env 设置 XIRANG_APP_KEY（可选 XIRANG_BASE_URL=https://wishub-x6.ctyun.cn/v1），或切换 LLM_PROVIDER=openrouter 并设置 OPENROUTER_API_KEY",
                     _ => "AI 未授权：请在 .env 设置 OPENROUTER_API_KEY（可选 OPENROUTER_BASE_URL），或切换 LLM_PROVIDER=cerebras 并设置 CEREBRAS_API_KEY",
                 };
                 return Err(anyhow::anyhow!(msg));
@@ -181,23 +182,29 @@ impl<P: LlmProvider + Clone + Send + Sync + 'static> GeneratorService<P> {
             for expression in &accepted {
                 if let Err(reason) = validate_prequeue(expression) {
                     let msg = match reason.as_str() {
-                        "unexpected_right_paren" => "预提交校验失败：存在意外右括号（形如 ...)(...）",
+                        "unexpected_right_paren" => {
+                            "预提交校验失败：存在意外右括号（形如 ...)(...）"
+                        }
                         "trailing_comma" => "预提交校验失败：存在拖尾逗号（形如 ...,)）",
                         "winsorize_arity" => "预提交校验失败：winsorize 仅接受 1 个输入参数",
                         _ => "预提交校验失败：表达式不符合入队规则",
                     };
-                    let _ = self.evt_tx.send(AppEvent::Log(format!("跳过入队：{} => {}", expression, msg)));
+                    let _ = self.evt_tx.send(AppEvent::Log(format!(
+                        "跳过入队：{} => {}",
+                        expression, msg
+                    )));
                     continue;
                 }
-                if let Err(crate::storage::repository::data_field_repo::EventOpValidationErr::Incompatible) =
-                    DataFieldRepository::validate_event_operator_compatibility(
-                        self.db.as_ref(),
-                        expression,
-                        cfg.region.as_deref(),
-                        cfg.universe.as_deref(),
-                        cfg.delay,
-                    )
-                    .await
+                if let Err(
+                    crate::storage::repository::data_field_repo::EventOpValidationErr::Incompatible,
+                ) = DataFieldRepository::validate_event_operator_compatibility(
+                    self.db.as_ref(),
+                    expression,
+                    cfg.region.as_deref(),
+                    cfg.universe.as_deref(),
+                    cfg.delay,
+                )
+                .await
                 {
                     let _ = self.evt_tx.send(AppEvent::Log(format!(
                         "跳过入队：{} => 预提交校验失败：事件字段与不兼容运算符组合",

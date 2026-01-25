@@ -81,7 +81,10 @@ impl AutoAuthSession {
         // 2. 互斥控制：确保只有一个任务在执行认证
         let mut is_auth = self.is_authenticating.lock().await;
         if *is_auth {
-            debug!("{} auth_request skipped (another authentication in progress)", self);
+            debug!(
+                "{} auth_request skipped (another authentication in progress)",
+                self
+            );
             // 简单等待一下然后返回（实际上应该等那个认证完成，但为了简单，先这样）
             tokio::time::sleep(Duration::from_millis(500)).await;
             // 随便返回一个空响应是不行的，但这里的调用者通常忽略返回值
@@ -90,7 +93,7 @@ impl AutoAuthSession {
 
         // 确保无论如何最后都会释放锁
         let result = self.do_auth_request().await;
-        
+
         *is_auth = false;
         result
     }
@@ -188,7 +191,10 @@ impl AutoAuthSession {
 
                 if status == StatusCode::UNAUTHORIZED || status == StatusCode::FORBIDDEN {
                     // 401/403: 触发重新认证
-                    warn!("{} status {}, triggering re-auth (try {})", self, status, try_num);
+                    warn!(
+                        "{} status {}, triggering re-auth (try {})",
+                        self, status, try_num
+                    );
                     let _ = self.auth_request().await;
                 } else if status == StatusCode::TOO_MANY_REQUESTS {
                     // 429: 限流退避，不执行认证
@@ -212,7 +218,12 @@ impl AutoAuthSession {
 
         if let Some(ref r) = resp {
             if !expected_fn(r) {
-                warn!("{} request(...) [max {} tries ran out, last status: {}]", self, tries, r.status());
+                warn!(
+                    "{} request(...) [max {} tries ran out, last status: {}]",
+                    self,
+                    tries,
+                    r.status()
+                );
             } else {
                 info!("{} request(...) [{} tries]", self, tries);
             }

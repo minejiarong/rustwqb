@@ -241,7 +241,8 @@ impl BacktestService {
                                 n, joined
                             )));
                         } else {
-                            let _ = evt_tx.send(AppEvent::Log("🧹 队列清理：无不兼容任务".to_string()));
+                            let _ =
+                                evt_tx.send(AppEvent::Log("🧹 队列清理：无不兼容任务".to_string()));
                         }
                     }
                 }

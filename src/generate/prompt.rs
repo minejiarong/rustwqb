@@ -21,7 +21,9 @@ impl PromptBuilder {
         );
         lines.push("No markdown, no explanations.".to_string());
         lines.push("Do NOT include any curly braces {} or annotations.".to_string());
-        lines.push("Do NOT append trailing markers like {CR}, {…}, comments or metadata.".to_string());
+        lines.push(
+            "Do NOT append trailing markers like {CR}, {…}, comments or metadata.".to_string(),
+        );
         lines.push("Do NOT use any operators starting with 'reduce_' (e.g., reduce_norm, reduce_sum, etc.).".to_string());
         lines.push("".to_string());
         lines.push(
@@ -144,7 +146,9 @@ impl PromptBuilder {
         );
         lines.push("No markdown, no explanations.".to_string());
         lines.push("Do NOT include any curly braces {} or annotations.".to_string());
-        lines.push("Do NOT append trailing markers like {CR}, {…}, comments or metadata.".to_string());
+        lines.push(
+            "Do NOT append trailing markers like {CR}, {…}, comments or metadata.".to_string(),
+        );
         lines.push("".to_string());
 
         if region.is_some() || universe.is_some() || delay.is_some() {
@@ -184,7 +188,11 @@ impl PromptBuilder {
 
         if !event_fields.is_empty() && !incompatible_ops.is_empty() {
             let preview: Vec<&String> = incompatible_ops.iter().take(50).collect();
-            let joined = preview.iter().map(|s| s.as_str()).collect::<Vec<_>>().join(", ");
+            let joined = preview
+                .iter()
+                .map(|s| s.as_str())
+                .collect::<Vec<_>>()
+                .join(", ");
             lines.push(format!(
                 "IMPORTANT: Do NOT use these operators with EVENT fields: {}",
                 joined

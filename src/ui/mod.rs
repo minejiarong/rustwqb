@@ -61,7 +61,7 @@ fn render_top_bar(f: &mut Frame, area: Rect) {
 }
 
 fn render_left_menu(f: &mut Frame, area: Rect, app: &App) {
-    let menu_items: Vec<ListItem> = vec!["Alpha 列表", "回测任务", "详细信息", "字段统计"]
+    let menu_items: Vec<ListItem> = ["Alpha 列表", "回测任务", "详细信息", "字段统计"]
         .iter()
         .enumerate()
         .map(|(i, text)| {

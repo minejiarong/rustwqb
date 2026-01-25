@@ -3,18 +3,35 @@ use crate::ai::types::{ChatRequest, ChatResponse, LlmError, LlmProvider};
 use async_trait::async_trait;
 use reqwest::StatusCode;
 use serde_json::Value;
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::Arc;
 
 #[derive(Clone)]
 pub struct CerebrasProvider {
     client: reqwest::Client,
     api_key: String,
     base_url: String,
+    api_keys: Vec<String>,
+    index: Arc<AtomicUsize>,
 }
 
 impl CerebrasProvider {
     pub fn from_env() -> Result<Self, LlmError> {
-        let api_key = std::env::var("CEREBRAS_API_KEY")
-            .map_err(|_| LlmError::MissingEnv("CEREBRAS_API_KEY"))?;
+        let keys_raw = std::env::var("CEREBRAS_API_KEYS").ok();
+        let api_keys = keys_raw
+            .map(|s| {
+                s.split(|c| c == ',' || c == ';' || c == '\n' || c == '\t' || c == ' ')
+                    .map(|x| x.trim().to_string())
+                    .filter(|x| !x.is_empty())
+                    .collect::<Vec<_>>()
+            })
+            .unwrap_or_default();
+        let api_key = if api_keys.is_empty() {
+            std::env::var("CEREBRAS_API_KEY")
+                .map_err(|_| LlmError::MissingEnv("CEREBRAS_API_KEY"))?
+        } else {
+            api_keys[0].clone()
+        };
         let base_url = std::env::var("CEREBRAS_BASE_URL")
             .unwrap_or_else(|_| "https://api.cerebras.ai/v1".to_string());
 
@@ -22,6 +39,8 @@ impl CerebrasProvider {
             client: build_llm_http_client()?,
             api_key,
             base_url,
+            api_keys,
+            index: Arc::new(AtomicUsize::new(0)),
         })
     }
 
@@ -31,6 +50,8 @@ impl CerebrasProvider {
             client,
             api_key,
             base_url,
+            api_keys: Vec::new(),
+            index: Arc::new(AtomicUsize::new(0)),
         }
     }
 }
@@ -50,10 +71,18 @@ impl LlmProvider for CerebrasProvider {
             "stream": false
         });
 
+        let key = if self.api_keys.is_empty() {
+            self.api_key.clone()
+        } else {
+            let i = self.index.fetch_add(1, Ordering::Relaxed);
+            let idx = i % self.api_keys.len();
+            self.api_keys[idx].clone()
+        };
+
         let resp = self
             .client
             .post(url)
-            .bearer_auth(&self.api_key)
+            .bearer_auth(&key)
             .header("Content-Type", "application/json")
             .json(&body)
             .send()

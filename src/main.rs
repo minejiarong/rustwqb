@@ -25,7 +25,9 @@ use crate::app_service::refresh_ui;
 use crate::app_state::{App, AppEvent};
 use crate::commands::AppCommand;
 use crate::storage::entity::Alpha;
-use crate::storage::repository::{AlphaDto, AlphaRepository, BacktestRepository, DataFieldRepository};
+use crate::storage::repository::{
+    AlphaDto, AlphaRepository, BacktestRepository, DataFieldRepository,
+};
 use crate::ui::draw;
 
 #[tokio::main(flavor = "multi_thread")]
@@ -166,18 +168,14 @@ async fn main() -> io::Result<()> {
         use crate::generate::{GenerateConfig, GeneratorService};
 
         // 1. 初始化 BacktestService
-        let backtest_service = if let Some(ref sess) = session_bg {
-            Some(BacktestService::new(
-                db_bg.clone(),
-                sess.clone(),
-                evt_tx_bg.clone(),
-            ))
-        } else {
-            None
-        };
+        let backtest_service = session_bg.as_ref().map(|sess| BacktestService::new(
+            db_bg.clone(),
+            sess.clone(),
+            evt_tx_bg.clone(),
+        ));
 
         // generate loop 控制
-        let mut gen_loop: Option<tokio::task::JoinHandle<()>> = None;
+        let mut gen_loop: Vec<tokio::task::JoinHandle<()>> = Vec::new();
 
         // 2. 执行恢复逻辑 + 启动常驻 workers
         if let Some(ref service) = backtest_service {
@@ -198,15 +196,11 @@ async fn main() -> io::Result<()> {
         }
 
         // 3. 初始化 FieldSyncService（仅命令触发，不在启动时自动同步）
-        let field_sync_service = if let Some(ref sess) = session_bg {
-            Some(Arc::new(FieldSyncService::new(
-                sess.clone(),
-                db_bg.clone(),
-                evt_tx_bg.clone(),
-            )))
-        } else {
-            None
-        };
+        let field_sync_service = session_bg.as_ref().map(|sess| Arc::new(FieldSyncService::new(
+            sess.clone(),
+            db_bg.clone(),
+            evt_tx_bg.clone(),
+        )));
         let ctx_provider: Option<Arc<dyn GenerateContextProvider>> = session_bg
             .as_ref()
             .map(|sess| Arc::new(ApiContextProvider::new(sess.clone())) as _);
@@ -265,9 +259,17 @@ async fn main() -> io::Result<()> {
                     let dbc = db_bg.clone();
                     let txc = evt_tx_bg.clone();
                     tokio::spawn(async move {
-                        match BacktestRepository::sanitize_queued_expressions(dbc.as_ref(), limit as u64).await {
+                        match BacktestRepository::sanitize_queued_expressions(
+                            dbc.as_ref(),
+                            limit as u64,
+                        )
+                        .await
+                        {
                             Ok((matched, cleaned)) => {
-                                let _ = txc.send(AppEvent::Message(format!("已清洗入队表达式：匹配 {} 条，修正 {}", matched, cleaned)));
+                                let _ = txc.send(AppEvent::Message(format!(
+                                    "已清洗入队表达式：匹配 {} 条，修正 {}",
+                                    matched, cleaned
+                                )));
                             }
                             Err(e) => {
                                 let _ = txc.send(AppEvent::Error(format!("清洗失败: {}", e)));
@@ -286,8 +288,10 @@ async fn main() -> io::Result<()> {
                     auto_backtest,
                 } => {
                     // 如果已有生成任务在运行，先停止
-                    if let Some(handle) = gen_loop.take() {
-                        handle.abort();
+                    if !gen_loop.is_empty() {
+                        for h in gen_loop.drain(..) {
+                            h.abort();
+                        }
                         let _ = evt_tx_bg.send(AppEvent::Message("停止之前的生成任务".to_string()));
                     }
 
@@ -304,13 +308,11 @@ async fn main() -> io::Result<()> {
                             }
                         };
 
-                        let generator = GeneratorService::new(
-                            provider,
-                            db_bg.clone(),
-                            sess.clone(),
-                            evt_tx_bg.clone(),
-                            ctx_provider.clone(),
-                        );
+                        let workers = std::env::var("GENERATE_WORKERS")
+                            .ok()
+                            .and_then(|s| s.parse::<usize>().ok())
+                            .unwrap_or(1)
+                            .max(1);
 
                         let config_clone = GenerateConfig {
                             batch_size: batch,
@@ -323,11 +325,24 @@ async fn main() -> io::Result<()> {
                             field_sample_size: sample_size,
                             auto_backtest,
                         };
-                        let handle = tokio::spawn(async move {
-                            generator.run_loop(config_clone).await;
-                        });
-                        gen_loop = Some(handle);
-                        let _ = evt_tx_bg.send(AppEvent::Message("开始生成任务...".to_string()));
+                        for _ in 0..workers {
+                            let generator = GeneratorService::new(
+                                provider.clone(),
+                                db_bg.clone(),
+                                sess.clone(),
+                                evt_tx_bg.clone(),
+                                ctx_provider.clone(),
+                            );
+                            let cfg = config_clone.clone();
+                            let handle = tokio::spawn(async move {
+                                generator.run_loop(cfg).await;
+                            });
+                            gen_loop.push(handle);
+                        }
+                        let _ = evt_tx_bg.send(AppEvent::Message(format!(
+                            "开始生成任务... (workers={})",
+                            workers
+                        )));
                     } else {
                         let _ = evt_tx_bg.send(AppEvent::Error("无法生成：未登录".to_string()));
                     }
@@ -353,14 +368,11 @@ async fn main() -> io::Result<()> {
                                 continue;
                             }
                         };
-
-                        let generator = GeneratorService::new(
-                            provider,
-                            db_bg.clone(),
-                            sess.clone(),
-                            evt_tx_bg.clone(),
-                            ctx_provider.clone(),
-                        );
+                        let workers = std::env::var("GENERATE_WORKERS")
+                            .ok()
+                            .and_then(|s| s.parse::<usize>().ok())
+                            .unwrap_or(1)
+                            .max(1);
 
                         let config = GenerateConfig {
                             batch_size: batch,
@@ -374,34 +386,50 @@ async fn main() -> io::Result<()> {
                             auto_backtest,
                         };
 
-                        tokio::spawn({
-                            let tx = evt_tx_bg.clone();
-                            async move {
-                                let _ =
-                                    tx.send(AppEvent::Message("开始单次生成任务...".to_string()));
-                                match generator.generate_once(&config).await {
-                                    Ok(res) => {
-                                        let _ = tx.send(AppEvent::Log(format!(
-                                            "单次生成完成: 候选 {}, 入库 {}, 拒绝 {}",
-                                            res.candidates,
-                                            res.inserted,
-                                            res.rejected_examples.len()
-                                        )));
-                                    }
-                                    Err(e) => {
-                                        let _ = tx
-                                            .send(AppEvent::Error(format!("单次生成出错: {}", e)));
+                        for _ in 0..workers {
+                            let generator = GeneratorService::new(
+                                provider.clone(),
+                                db_bg.clone(),
+                                sess.clone(),
+                                evt_tx_bg.clone(),
+                                ctx_provider.clone(),
+                            );
+                            let cfg = config.clone();
+                            tokio::spawn({
+                                let tx = evt_tx_bg.clone();
+                                async move {
+                                    let _ = tx.send(AppEvent::Message(format!(
+                                        "开始单次生成任务... (workers={})",
+                                        workers
+                                    )));
+                                    match generator.generate_once(&cfg).await {
+                                        Ok(res) => {
+                                            let _ = tx.send(AppEvent::Log(format!(
+                                                "单次生成完成: 候选 {}, 入库 {}, 拒绝 {}",
+                                                res.candidates,
+                                                res.inserted,
+                                                res.rejected_examples.len()
+                                            )));
+                                        }
+                                        Err(e) => {
+                                            let _ = tx.send(AppEvent::Error(format!(
+                                                "单次生成出错: {}",
+                                                e
+                                            )));
+                                        }
                                     }
                                 }
-                            }
-                        });
+                            });
+                        }
                     } else {
                         let _ = evt_tx_bg.send(AppEvent::Error("无法生成：未登录".to_string()));
                     }
                 }
                 AppCommand::GenerateStop => {
-                    if let Some(handle) = gen_loop.take() {
-                        handle.abort();
+                    if !gen_loop.is_empty() {
+                        for h in gen_loop.drain(..) {
+                            h.abort();
+                        }
                         let _ = evt_tx_bg.send(AppEvent::Message("生成任务已停止".to_string()));
                     }
                 }
@@ -470,25 +498,32 @@ async fn main() -> io::Result<()> {
                     let dbc = db_bg.clone();
                     let txc = evt_tx_bg.clone();
                     tokio::spawn(async move {
-                        let default_path = std::path::PathBuf::from("logs").join("backtest_errors.csv");
+                        let default_path =
+                            std::path::PathBuf::from("logs").join("backtest_errors.csv");
                         let out_path = path
-                            .and_then(|p| {
+                            .map(|p| {
                                 let pb = std::path::PathBuf::from(p);
-                                Some(pb)
+                                pb
                             })
                             .unwrap_or(default_path);
                         let parent = out_path.parent().map(|p| p.to_path_buf());
                         if let Some(dir) = parent {
                             let _ = std::fs::create_dir_all(&dir);
                         }
-                        match crate::storage::repository::BacktestRepository::list_recent_errors(dbc.as_ref(), limit as u64).await {
+                        match crate::storage::repository::BacktestRepository::list_recent_errors(
+                            dbc.as_ref(),
+                            limit as u64,
+                        )
+                        .await
+                        {
                             Ok(rows) => {
                                 let mut buf = String::new();
                                 buf.push_str("updated_at,expression,error_message\n");
                                 for r in rows.iter() {
-                                    let ts = chrono::NaiveDateTime::from_timestamp_opt(r.updated_at, 0)
-                                        .map(|d| d.format("%Y-%m-%d %H:%M:%S").to_string())
-                                        .unwrap_or_else(|| r.updated_at.to_string());
+                                    let ts =
+                                        chrono::NaiveDateTime::from_timestamp_opt(r.updated_at, 0)
+                                            .map(|d| d.format("%Y-%m-%d %H:%M:%S").to_string())
+                                            .unwrap_or_else(|| r.updated_at.to_string());
                                     let expr = r.expression.replace('\"', "\"\"");
                                     let msg = r
                                         .last_error_message
@@ -514,7 +549,8 @@ async fn main() -> io::Result<()> {
                                 }
                             }
                             Err(e) => {
-                                let _ = txc.send(AppEvent::Error(format!("查询错误记录失败: {}", e)));
+                                let _ =
+                                    txc.send(AppEvent::Error(format!("查询错误记录失败: {}", e)));
                             }
                         }
                     });
@@ -667,11 +703,10 @@ async fn run_app_loop<B: ratatui::backend::Backend>(
 
         if event::poll(std::time::Duration::from_millis(100))? {
             if let Event::Key(key) = event::read()? {
-                if key.kind == KeyEventKind::Press {
-                    if app.handle_key_event(key.code) {
+                if key.kind == KeyEventKind::Press
+                    && app.handle_key_event(key.code) {
                         return Ok(());
                     }
-                }
             }
         }
     }

@@ -1,6 +1,7 @@
 use crate::storage::entity::backtest_job::{
     self, ActiveModel as BacktestJobActiveModel, Entity as BacktestJob,
 };
+use crate::storage::repository::data_field_repo::{DataFieldRepository, EventOpValidationErr};
 use chrono::Utc;
 use sea_orm::sea_query::Expr;
 use sea_orm::{
@@ -9,7 +10,6 @@ use sea_orm::{
 };
 use sea_orm::{ConnectionTrait, Statement};
 use serde_json::Value;
-use crate::storage::repository::data_field_repo::{EventOpValidationErr, DataFieldRepository};
 
 pub struct BacktestRepository;
 
@@ -496,5 +496,9 @@ fn sanitize_expr(expr: &str) -> String {
         }
     }
     let s = out.replace('\n', " ");
-    s.split_whitespace().collect::<Vec<_>>().join(" ").trim().to_string()
+    s.split_whitespace()
+        .collect::<Vec<_>>()
+        .join(" ")
+        .trim()
+        .to_string()
 }

@@ -7,7 +7,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
 #[derive(Clone)]
-pub struct OpenRouterProvider {
+pub struct XirangProvider {
     client: reqwest::Client,
     api_key: String,
     base_url: String,
@@ -15,9 +15,9 @@ pub struct OpenRouterProvider {
     index: Arc<AtomicUsize>,
 }
 
-impl OpenRouterProvider {
+impl XirangProvider {
     pub fn from_env() -> Result<Self, LlmError> {
-        let keys_raw = std::env::var("OPENROUTER_API_KEYS").ok();
+        let keys_raw = std::env::var("XIRANG_APP_KEYS").ok();
         let api_keys = keys_raw
             .map(|s| {
                 s.split(|c| c == ',' || c == ';' || c == '\n' || c == '\t' || c == ' ')
@@ -27,14 +27,14 @@ impl OpenRouterProvider {
             })
             .unwrap_or_default();
         let api_key = if api_keys.is_empty() {
-            std::env::var("OPENROUTER_API_KEY")
-                .map_err(|_| LlmError::MissingEnv("OPENROUTER_API_KEY"))?
+            std::env::var("XIRANG_APP_KEY")
+                .or_else(|_| std::env::var("XIRANG_app_key"))
+                .map_err(|_| LlmError::MissingEnv("XIRANG_APP_KEY"))?
         } else {
             api_keys[0].clone()
         };
-        let base_url = std::env::var("OPENROUTER_BASE_URL")
-            .unwrap_or_else(|_| "https://openrouter.ai/api/v1".to_string());
-
+        let base_url = std::env::var("XIRANG_BASE_URL")
+            .unwrap_or_else(|_| "https://wishub-x6.ctyun.cn/v1".to_string());
         Ok(Self {
             client: build_llm_http_client()?,
             api_key,
@@ -43,21 +43,10 @@ impl OpenRouterProvider {
             index: Arc::new(AtomicUsize::new(0)),
         })
     }
-
-    pub fn new(api_key: String, _model: String, base_url: String) -> Self {
-        let client = build_llm_http_client().unwrap_or_else(|_| reqwest::Client::new());
-        Self {
-            client,
-            api_key,
-            base_url,
-            api_keys: Vec::new(),
-            index: Arc::new(AtomicUsize::new(0)),
-        }
-    }
 }
 
 #[async_trait]
-impl LlmProvider for OpenRouterProvider {
+impl LlmProvider for XirangProvider {
     async fn chat(&self, req: ChatRequest) -> Result<ChatResponse, LlmError> {
         let url = format!("{}/chat/completions", self.base_url.trim_end_matches('/'));
         let body = serde_json::json!({
@@ -67,7 +56,8 @@ impl LlmProvider for OpenRouterProvider {
             "messages": [
                 {"role": "system", "content": req.system},
                 {"role": "user", "content": req.user}
-            ]
+            ],
+            "stream": false
         });
 
         let key = if self.api_keys.is_empty() {
@@ -99,25 +89,20 @@ impl LlmProvider for OpenRouterProvider {
             .text()
             .await
             .map_err(|e| LlmError::Http(e.to_string()))?;
-
         if !status.is_success() {
             return Err(LlmError::Http(format!("{} {}", status.as_u16(), raw)));
         }
 
         let v: Value = serde_json::from_str(&raw)
             .map_err(|e| LlmError::InvalidResponse(format!("json parse failed: {e}, raw={raw}")))?;
-
-        // 兼容多种返回结构：message.content（字符串或数组）、content（字符串或数组）、text，以及顶层 output_text
         let choice0 = v
             .get("choices")
             .and_then(|c| c.get(0))
             .ok_or_else(|| LlmError::InvalidResponse(format!("missing choices[0], raw={raw}")))?;
-
         let content = choice0
             .get("message")
             .and_then(|m| m.get("content"))
             .or_else(|| choice0.get("content"));
-
         let text = if let Some(content) = content {
             match content {
                 Value::String(s) => s.clone(),
@@ -138,10 +123,6 @@ impl LlmProvider for OpenRouterProvider {
                     )))
                 }
             }
-        } else if let Some(Value::String(s)) = choice0.get("text") {
-            s.clone()
-        } else if let Some(Value::String(s)) = v.get("output_text") {
-            s.clone()
         } else {
             return Err(LlmError::InvalidResponse(format!(
                 "missing content/text in choices[0], raw={raw}"

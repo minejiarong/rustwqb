@@ -2,11 +2,13 @@ pub mod cerebras;
 pub mod openrouter;
 pub mod types;
 pub mod unified;
+pub mod xirang;
 
 pub use cerebras::CerebrasProvider;
 pub use openrouter::OpenRouterProvider;
 pub use types::{ChatRequest, ChatResponse, LlmError, LlmProvider};
 pub use unified::AnyProvider;
+pub use xirang::XirangProvider;
 
 pub(crate) fn build_llm_http_client() -> Result<reqwest::Client, LlmError> {
     let mut builder = reqwest::Client::builder();

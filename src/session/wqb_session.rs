@@ -127,14 +127,12 @@ impl WQBSession {
         let limit = limit.unwrap_or(50).min(50).max(1);
         let offset = offset.unwrap_or(0).min(10000 - limit).max(0);
 
-        let params = vec![
-            format!("region={}", region),
+        let params = [format!("region={}", region),
             format!("delay={}", delay),
             format!("universe={}", universe),
             format!("instrumentType=EQUITY"),
             format!("limit={}", limit),
-            format!("offset={}", offset),
-        ];
+            format!("offset={}", offset)];
 
         let url = format!("{}?{}", URL_DATASETS, params.join("&"));
         let resp = self.session.request(|client| client.get(&url)).await?;
@@ -154,14 +152,12 @@ impl WQBSession {
         let limit = limit.unwrap_or(50).min(50).max(1);
         let offset = offset.unwrap_or(0).min(10000 - limit).max(0);
 
-        let params = vec![
-            format!("region={}", region),
+        let params = [format!("region={}", region),
             format!("delay={}", delay),
             format!("universe={}", universe),
             format!("instrumentType=EQUITY"),
             format!("limit={}", limit),
-            format!("offset={}", offset),
-        ];
+            format!("offset={}", offset)];
 
         let url = format!("{}?{}", URL_DATAFIELDS, params.join("&"));
         let resp = self.session.request(|client| client.get(&url)).await?;
