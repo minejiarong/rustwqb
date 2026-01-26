@@ -21,7 +21,7 @@ use std::io;
 use std::sync::Arc;
 use tokio::sync::mpsc;
 
-use crate::app_service::refresh_ui;
+use crate::app_service::{refresh_ui, refresh_stats};
 use crate::app_state::{App, AppEvent};
 use crate::commands::AppCommand;
 use crate::storage::entity::Alpha;
@@ -183,13 +183,13 @@ async fn main() -> io::Result<()> {
             service.start_workers();
         }
 
-        // 2.1 周期性刷新 UI（Alpha 列表 + 回测统计）
+        // 2.1 周期性刷新统计
         {
             let dbc = db_bg.clone();
             let txc = evt_tx_bg.clone();
             tokio::spawn(async move {
                 loop {
-                    refresh_ui(&dbc, &txc).await;
+                    refresh_stats(&dbc, &txc).await;
                     tokio::time::sleep(std::time::Duration::from_secs(2)).await;
                 }
             });
@@ -217,16 +217,37 @@ async fn main() -> io::Result<()> {
                                     "已添加回测任务 [ID: {}]: {}",
                                     id, expr
                                 )));
+                                {
+                                    let dbc = db_bg.clone();
+                                    let txc = evt_tx_bg.clone();
+                                    tokio::spawn(async move {
+                                        refresh_ui(&dbc, &txc).await;
+                                    });
+                                }
                             }
                             Ok(None) => {
                                 let _ = evt_tx_bg.send(AppEvent::Message(format!(
                                     "回测任务已存在（跳过入队）: {}",
                                     expr
                                 )));
+                                {
+                                    let dbc = db_bg.clone();
+                                    let txc = evt_tx_bg.clone();
+                                    tokio::spawn(async move {
+                                        refresh_ui(&dbc, &txc).await;
+                                    });
+                                }
                             }
                             Err(e) => {
                                 let _ = evt_tx_bg
                                     .send(AppEvent::Error(format!("添加回测任务失败: {}", e)));
+                                {
+                                    let dbc = db_bg.clone();
+                                    let txc = evt_tx_bg.clone();
+                                    tokio::spawn(async move {
+                                        refresh_ui(&dbc, &txc).await;
+                                    });
+                                }
                             }
                         }
                     } else {
@@ -239,6 +260,13 @@ async fn main() -> io::Result<()> {
                     Ok(_) => {
                         let _ = evt_tx_bg
                             .send(AppEvent::Message("已清空所有 Alpha 及其关系".to_string()));
+                        {
+                            let dbc = db_bg.clone();
+                            let txc = evt_tx_bg.clone();
+                            tokio::spawn(async move {
+                                refresh_ui(&dbc, &txc).await;
+                            });
+                        }
                     }
                     Err(e) => {
                         let _ = evt_tx_bg.send(AppEvent::Error(format!("清空失败: {}", e)));
@@ -249,6 +277,13 @@ async fn main() -> io::Result<()> {
                         Ok(rows) => {
                             let _ = evt_tx_bg
                                 .send(AppEvent::Message(format!("已清空回测队列，共 {} 条", rows)));
+                            {
+                                let dbc = db_bg.clone();
+                                let txc = evt_tx_bg.clone();
+                                tokio::spawn(async move {
+                                    refresh_stats(&dbc, &txc).await;
+                                });
+                            }
                         }
                         Err(e) => {
                             let _ = evt_tx_bg.send(AppEvent::Error(format!("回测清空失败: {}", e)));

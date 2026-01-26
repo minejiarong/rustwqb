@@ -5,6 +5,7 @@ use crate::storage::repository::{
     AlphaRepository, BacktestRepository, DataFieldRepository, OperatorCompatRepository,
 };
 use crate::AppEvent;
+use crate::app_service::refresh_ui;
 use log::{error, info, warn};
 use sea_orm::{DatabaseConnection, EntityTrait};
 use std::sync::Arc;
@@ -141,6 +142,7 @@ impl BacktestService {
         }
 
         let _ = evt_tx.send(AppEvent::Log(format!("✓ 回测任务完成: {}", expression)));
+        refresh_ui(db, evt_tx).await;
     }
 
     /// 处理失败结果：根据错误分型决定流转
@@ -254,6 +256,7 @@ impl BacktestService {
             }
             let _ = evt_tx.send(AppEvent::Log(format!("✗ 回测最终失败: {}", err.message)));
         }
+        refresh_ui(db, evt_tx).await;
     }
 
     /// 系统启动时的恢复逻辑：清理中间态

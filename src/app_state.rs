@@ -6,6 +6,13 @@ use ratatui::widgets::ListState;
 use std::str::FromStr;
 use tokio::sync::mpsc;
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct FilterState {
+    pub status: Option<String>,
+    pub query: String,
+    pub no_fail: bool,
+}
+
 #[derive(PartialEq, Debug, Clone)]
 pub enum ViewMode {
     AlphaList,
@@ -68,6 +75,10 @@ pub struct App {
     pub log_messages: Vec<String>,
     pub cmd_tx: mpsc::UnboundedSender<AppCommand>,
     pub evt_rx: Option<mpsc::UnboundedReceiver<AppEvent>>, // Changed to Option to allow taking it out
+    pub ui_topk_limit: usize,
+    pub cached_filtered: Option<Vec<AlphaSummary>>,
+    pub last_filter_state: Option<FilterState>,
+    pub last_alphas_hash: u64,
 }
 
 impl App {
@@ -78,6 +89,11 @@ impl App {
     ) -> App {
         let mut log_messages = vec!["应用已启动".to_string()];
         log_messages.extend(session_info);
+        let ui_topk_limit = std::env::var("UI_TOPK_LIMIT")
+            .ok()
+            .and_then(|s| s.parse::<usize>().ok())
+            .unwrap_or(500)
+            .max(1);
 
         App {
             view_mode: ViewMode::AlphaList,
@@ -106,6 +122,10 @@ impl App {
             log_messages,
             cmd_tx,
             evt_rx: Some(evt_rx),
+            ui_topk_limit,
+            cached_filtered: None,
+            last_filter_state: None,
+            last_alphas_hash: 0,
         }
     }
 
@@ -173,7 +193,41 @@ impl App {
         self.alpha_list_state.select(Some(self.selected_index));
     }
 
+    fn compute_alphas_hash(&self) -> u64 {
+        use std::hash::{Hash, Hasher};
+        let mut hasher = std::collections::hash_map::DefaultHasher::new();
+        self.alphas_all.len().hash(&mut hasher);
+        for a in &self.alphas_all {
+            a.expression.hash(&mut hasher);
+            a.status.hash(&mut hasher);
+            (a.has_fail as u8).hash(&mut hasher);
+            if let Some(v) = a.is_sharpe {
+                let bits = v.to_bits();
+                bits.hash(&mut hasher);
+            } else {
+                0u8.hash(&mut hasher);
+            }
+        }
+        hasher.finish()
+    }
+
     pub fn apply_filters(&mut self) {
+        let fs = FilterState {
+            status: self.filter_status.clone(),
+            query: self.filter_query.clone(),
+            no_fail: self.filter_no_fail,
+        };
+        let cur_hash = self.compute_alphas_hash();
+        if let (Some(cached), Some(last_fs)) = (&self.cached_filtered, &self.last_filter_state) {
+            if *last_fs == fs && self.last_alphas_hash == cur_hash {
+                self.alpha_list = cached.clone();
+                if self.selected_index >= self.alpha_list.len() {
+                    self.selected_index = 0;
+                }
+                self.alpha_list_state.select(Some(self.selected_index));
+                return;
+            }
+        }
         let mut filtered: Vec<AlphaSummary> = self
             .alphas_all
             .iter()
@@ -201,22 +255,85 @@ impl App {
             self.filter_status = None;
         }
 
-        filtered.sort_by(|a, b| {
-            let a_sharpe = a.is_sharpe.filter(|x| x.is_finite());
-            let b_sharpe = b.is_sharpe.filter(|x| x.is_finite());
-            match (a_sharpe, b_sharpe) {
-                (Some(sa), Some(sb)) => sb.total_cmp(&sa),
-                (Some(_), None) => std::cmp::Ordering::Less,
-                (None, Some(_)) => std::cmp::Ordering::Greater,
-                (None, None) => std::cmp::Ordering::Equal,
+        let k = self.ui_topk_limit.min(filtered.len());
+        if k > 0 && filtered.len() > k {
+            use std::cmp::Ordering;
+            use std::cmp::Reverse;
+            use std::collections::BinaryHeap;
+            #[derive(Clone)]
+            struct KeyedAlpha {
+                key: f64,
+                alpha: AlphaSummary,
             }
-        });
+            impl Eq for KeyedAlpha {}
+            impl PartialEq for KeyedAlpha {
+                fn eq(&self, other: &Self) -> bool {
+                    self.key.to_bits() == other.key.to_bits()
+                }
+            }
+            impl Ord for KeyedAlpha {
+                fn cmp(&self, other: &Self) -> Ordering {
+                    self.key.total_cmp(&other.key)
+                }
+            }
+            impl PartialOrd for KeyedAlpha {
+                fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+                    Some(self.cmp(other))
+                }
+            }
+            let mut heap: BinaryHeap<Reverse<KeyedAlpha>> = BinaryHeap::new();
+            for a in &filtered {
+                let key = match a.is_sharpe {
+                    Some(v) if v.is_finite() => v,
+                    _ => f64::NEG_INFINITY,
+                };
+                heap.push(Reverse(KeyedAlpha {
+                    key,
+                    alpha: a.clone(),
+                }));
+                if heap.len() > k {
+                    heap.pop();
+                }
+            }
+            let mut top: Vec<KeyedAlpha> = Vec::with_capacity(heap.len());
+            while let Some(Reverse(ka)) = heap.pop() {
+                top.push(ka);
+            }
+            top.sort_by(|a, b| {
+                b.key.total_cmp(&a.key)
+            });
+            let top_set: std::collections::HashSet<String> =
+                top.iter().map(|ka| ka.alpha.expression.clone()).collect();
+            let mut rest: Vec<AlphaSummary> = Vec::with_capacity(filtered.len() - top.len());
+            for a in filtered.into_iter() {
+                if !top_set.contains(&a.expression) {
+                    rest.push(a);
+                }
+            }
+            let mut sorted: Vec<AlphaSummary> = top.into_iter().map(|ka| ka.alpha).collect();
+            sorted.extend(rest);
+            self.alpha_list = sorted;
+        } else {
+            filtered.sort_by(|a, b| {
+                let a_sharpe = a.is_sharpe.filter(|x| x.is_finite());
+                let b_sharpe = b.is_sharpe.filter(|x| x.is_finite());
+                match (a_sharpe, b_sharpe) {
+                    (Some(sa), Some(sb)) => sb.total_cmp(&sa),
+                    (Some(_), None) => std::cmp::Ordering::Less,
+                    (None, Some(_)) => std::cmp::Ordering::Greater,
+                    (None, None) => std::cmp::Ordering::Equal,
+                }
+            });
+            self.alpha_list = filtered;
+        }
 
-        self.alpha_list = filtered;
         if self.selected_index >= self.alpha_list.len() {
             self.selected_index = 0;
         }
         self.alpha_list_state.select(Some(self.selected_index));
+        self.cached_filtered = Some(self.alpha_list.clone());
+        self.last_filter_state = Some(fs);
+        self.last_alphas_hash = cur_hash;
     }
 
     /// 请求详情数据

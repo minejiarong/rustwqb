@@ -146,11 +146,26 @@ impl LlmProvider for CerebrasProvider {
                     for it in arr {
                         if let Some(t) = it.get("text").and_then(|x| x.as_str()) {
                             parts.push(t.to_string());
+                        } else if let Some(t) = it.get("content").and_then(|x| x.as_str()) {
+                            parts.push(t.to_string());
                         } else if let Some(t) = it.as_str() {
                             parts.push(t.to_string());
                         }
                     }
                     parts.join("\n")
+                }
+                Value::Object(obj) => {
+                    if let Some(Value::String(s)) = obj.get("text") {
+                        s.clone()
+                    } else if let Some(Value::String(s)) = obj.get("output_text") {
+                        s.clone()
+                    } else if let Some(Value::String(s)) = obj.get("content") {
+                        s.clone()
+                    } else {
+                        return Err(LlmError::InvalidResponse(format!(
+                            "unexpected message.content type, raw={raw}"
+                        )));
+                    }
                 }
                 _ => {
                     return Err(LlmError::InvalidResponse(format!(
@@ -159,6 +174,8 @@ impl LlmProvider for CerebrasProvider {
                 }
             }
         } else if let Some(Value::String(s)) = choice0.get("text") {
+            s.clone()
+        } else if let Some(Value::String(s)) = v.get("output_text") {
             s.clone()
         } else {
             return Err(LlmError::InvalidResponse(format!(

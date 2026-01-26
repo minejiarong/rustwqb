@@ -122,7 +122,6 @@ impl LlmProvider for OpenRouterProvider {
         let v: Value = serde_json::from_str(&raw)
             .map_err(|e| LlmError::InvalidResponse(format!("json parse failed: {e}, raw={raw}")))?;
 
-        // 兼容多种返回结构：message.content（字符串或数组）、content（字符串或数组）、text，以及顶层 output_text
         let choice0 = v
             .get("choices")
             .and_then(|c| c.get(0))
@@ -141,11 +140,26 @@ impl LlmProvider for OpenRouterProvider {
                     for it in arr {
                         if let Some(t) = it.get("text").and_then(|x| x.as_str()) {
                             parts.push(t.to_string());
+                        } else if let Some(t) = it.get("content").and_then(|x| x.as_str()) {
+                            parts.push(t.to_string());
                         } else if let Some(t) = it.as_str() {
                             parts.push(t.to_string());
                         }
                     }
                     parts.join("\n")
+                }
+                Value::Object(obj) => {
+                    if let Some(Value::String(s)) = obj.get("text") {
+                        s.clone()
+                    } else if let Some(Value::String(s)) = obj.get("output_text") {
+                        s.clone()
+                    } else if let Some(Value::String(s)) = obj.get("content") {
+                        s.clone()
+                    } else {
+                        return Err(LlmError::InvalidResponse(format!(
+                            "unexpected content type, raw={raw}"
+                        )));
+                    }
                 }
                 _ => {
                     return Err(LlmError::InvalidResponse(format!(

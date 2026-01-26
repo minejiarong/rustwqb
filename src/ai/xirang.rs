@@ -137,11 +137,26 @@ impl LlmProvider for XirangProvider {
                     for it in arr {
                         if let Some(t) = it.get("text").and_then(|x| x.as_str()) {
                             parts.push(t.to_string());
+                        } else if let Some(t) = it.get("content").and_then(|x| x.as_str()) {
+                            parts.push(t.to_string());
                         } else if let Some(t) = it.as_str() {
                             parts.push(t.to_string());
                         }
                     }
                     parts.join("\n")
+                }
+                Value::Object(obj) => {
+                    if let Some(Value::String(s)) = obj.get("text") {
+                        s.clone()
+                    } else if let Some(Value::String(s)) = obj.get("output_text") {
+                        s.clone()
+                    } else if let Some(Value::String(s)) = obj.get("content") {
+                        s.clone()
+                    } else {
+                        return Err(LlmError::InvalidResponse(format!(
+                            "unexpected content type, raw={raw}"
+                        )));
+                    }
                 }
                 _ => {
                     return Err(LlmError::InvalidResponse(format!(

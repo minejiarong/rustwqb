@@ -37,3 +37,9 @@ pub async fn refresh_ui(db: &Arc<DatabaseConnection>, tx: &mpsc::UnboundedSender
         let _ = tx.send(AppEvent::Stats(stats));
     }
 }
+
+pub async fn refresh_stats(db: &Arc<DatabaseConnection>, tx: &mpsc::UnboundedSender<AppEvent>) {
+    if let Ok(stats) = BacktestRepository::get_stats(db).await {
+        let _ = tx.send(AppEvent::Stats(stats));
+    }
+}
