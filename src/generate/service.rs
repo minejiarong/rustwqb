@@ -59,6 +59,7 @@ impl<P: LlmProvider + Clone + Send + Sync + 'static> GeneratorService<P> {
     }
 
     pub async fn run_loop(&self, cfg: GenerateConfig) {
+        let mut backoff: u64 = 0;
         loop {
             match self.generate_once(&cfg).await {
                 Ok(res) => {
@@ -68,14 +69,23 @@ impl<P: LlmProvider + Clone + Send + Sync + 'static> GeneratorService<P> {
                         res.inserted,
                         res.rejected_examples.len()
                     )));
+                    backoff = 0;
                 }
                 Err(e) => {
+                    let msg = e.to_string().to_ascii_lowercase();
+                    if msg.contains("rate limited") || msg.contains("429") {
+                        backoff = if backoff == 0 { 5 } else { (backoff.saturating_mul(2)).min(600) };
+                    } else {
+                        backoff = cfg.interval_sec;
+                    }
                     let _ = self
                         .evt_tx
                         .send(AppEvent::Error(format!("生成出错: {}", e)));
                 }
             }
-            tokio::time::sleep(tokio::time::Duration::from_secs(cfg.interval_sec)).await;
+            let delay = if backoff > 0 { backoff } else { cfg.interval_sec };
+            let jitter = if delay > 0 { (delay / 5) * (rand::random::<u8>() as u64 % 5) / 5 } else { 0 };
+            tokio::time::sleep(tokio::time::Duration::from_secs(delay + jitter)).await;
         }
     }
 

@@ -70,23 +70,38 @@ impl LlmProvider for OpenRouterProvider {
             ]
         });
 
-        let key = if self.api_keys.is_empty() {
-            self.api_key.clone()
-        } else {
-            let i = self.index.fetch_add(1, Ordering::Relaxed);
-            let idx = i % self.api_keys.len();
-            self.api_keys[idx].clone()
-        };
-
-        let resp = self
-            .client
-            .post(url)
-            .bearer_auth(&key)
-            .header("Content-Type", "application/json")
-            .json(&body)
-            .send()
-            .await
-            .map_err(|e| LlmError::Http(e.to_string()))?;
+        let mut resp = None;
+        for _ in 0..2 {
+            let key = if self.api_keys.is_empty() {
+                self.api_key.clone()
+            } else {
+                let i = self.index.fetch_add(1, Ordering::Relaxed);
+                let idx = i % self.api_keys.len();
+                self.api_keys[idx].clone()
+            };
+            match self
+                .client
+                .post(url.clone())
+                .bearer_auth(&key)
+                .header("Content-Type", "application/json")
+                .json(&body)
+                .send()
+                .await
+            {
+                Ok(r) => {
+                    resp = Some(r);
+                    break;
+                }
+                Err(e) => {
+                    if e.is_timeout() {
+                        continue;
+                    } else {
+                        return Err(LlmError::Http(e.to_string()));
+                    }
+                }
+            }
+        }
+        let resp = resp.ok_or_else(|| LlmError::Http("timeout".to_string()))?;
 
         match resp.status() {
             StatusCode::UNAUTHORIZED | StatusCode::FORBIDDEN => return Err(LlmError::Unauthorized),

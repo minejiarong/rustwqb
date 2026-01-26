@@ -12,6 +12,13 @@ pub use xirang::XirangProvider;
 
 pub(crate) fn build_llm_http_client() -> Result<reqwest::Client, LlmError> {
     let mut builder = reqwest::Client::builder();
+    if let Ok(t) = std::env::var("LLM_TIMEOUT_SECS") {
+        if let Ok(secs) = t.trim().parse::<u64>() {
+            builder = builder.timeout(std::time::Duration::from_secs(secs.max(1)));
+        }
+    } else {
+        builder = builder.timeout(std::time::Duration::from_secs(300));
+    }
 
     if let Ok(raw) = std::env::var("LLM_PROXY") {
         let t = raw.trim();

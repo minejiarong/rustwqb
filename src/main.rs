@@ -298,15 +298,6 @@ async fn main() -> io::Result<()> {
                     if let (Some(sess), Some(ctx_provider)) =
                         (session_bg.as_ref(), ctx_provider.as_ref())
                     {
-                        let provider = match AnyProvider::from_env() {
-                            Ok(p) => p,
-                            Err(_) => {
-                                let _ = evt_tx_bg.send(AppEvent::Error(
-                                    "无法生成：缺少 AI 供应商配置".to_string(),
-                                ));
-                                continue;
-                            }
-                        };
 
                         let workers = std::env::var("GENERATE_WORKERS")
                             .ok()
@@ -325,9 +316,18 @@ async fn main() -> io::Result<()> {
                             field_sample_size: sample_size,
                             auto_backtest,
                         };
-                        for _ in 0..workers {
+                        for wi in 0..workers {
+                            let provider = match AnyProvider::from_env_for_worker(wi) {
+                                Ok(p) => p,
+                                Err(_) => {
+                                    let _ = evt_tx_bg.send(AppEvent::Error(
+                                        "无法生成：缺少或错误的 AI 供应商配置".to_string(),
+                                    ));
+                                    continue;
+                                }
+                            };
                             let generator = GeneratorService::new(
-                                provider.clone(),
+                                provider,
                                 db_bg.clone(),
                                 sess.clone(),
                                 evt_tx_bg.clone(),
@@ -359,15 +359,6 @@ async fn main() -> io::Result<()> {
                     if let (Some(sess), Some(ctx_provider)) =
                         (session_bg.as_ref(), ctx_provider.as_ref())
                     {
-                        let provider = match AnyProvider::from_env() {
-                            Ok(p) => p,
-                            Err(_) => {
-                                let _ = evt_tx_bg.send(AppEvent::Error(
-                                    "无法生成：缺少 AI 供应商配置".to_string(),
-                                ));
-                                continue;
-                            }
-                        };
                         let workers = std::env::var("GENERATE_WORKERS")
                             .ok()
                             .and_then(|s| s.parse::<usize>().ok())
@@ -386,9 +377,18 @@ async fn main() -> io::Result<()> {
                             auto_backtest,
                         };
 
-                        for _ in 0..workers {
+                        for wi in 0..workers {
+                            let provider = match AnyProvider::from_env_for_worker(wi) {
+                                Ok(p) => p,
+                                Err(_) => {
+                                    let _ = evt_tx_bg.send(AppEvent::Error(
+                                        "无法生成：缺少或错误的 AI 供应商配置".to_string(),
+                                    ));
+                                    continue;
+                                }
+                            };
                             let generator = GeneratorService::new(
-                                provider.clone(),
+                                provider,
                                 db_bg.clone(),
                                 sess.clone(),
                                 evt_tx_bg.clone(),

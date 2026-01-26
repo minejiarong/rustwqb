@@ -24,11 +24,16 @@ impl BacktestService {
         session: Arc<WQBSession>,
         evt_tx: mpsc::UnboundedSender<AppEvent>,
     ) -> Self {
+        let wc = std::env::var("BACKTEST_WORKERS")
+            .ok()
+            .and_then(|s| s.parse::<usize>().ok())
+            .unwrap_or(10)
+            .max(1);
         Self {
             db,
             session,
             evt_tx,
-            worker_count: 10,
+            worker_count: wc,
         }
     }
 

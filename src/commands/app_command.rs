@@ -120,6 +120,48 @@ impl FromStr for AppCommand {
             "generate" => {
                 match parts.get(1).map(|s| *s) {
                     Some("stop") => Ok(AppCommand::GenerateStop),
+                    Some("turbo") => {
+                        let n = parts.get(2).and_then(|s| s.parse().ok()).unwrap_or(1);
+                        let provider = std::env::var("LLM_PROVIDER")
+                            .unwrap_or_else(|_| "openrouter".to_string())
+                            .to_lowercase();
+                        let mut idx = 3usize;
+                        let mut model = match provider.as_str() {
+                            "cerebras" => "llama-3.3-70b".to_string(),
+                            "xirang" => std::env::var("XIRANG_MODEL_ID")
+                                .unwrap_or_else(|_| "ff3f5c450f3b459cbe5d04a5ea9b2511".to_string()),
+                            _ => "deepseek/deepseek-r1".to_string(),
+                        };
+                        if let Some(tok) = parts.get(idx) {
+                            let t = tok.to_string();
+                            if !is_region_code(&t) {
+                                model = t;
+                                idx += 1;
+                            }
+                        }
+                        let region = parts.get(idx).map(|s| s.to_string());
+                        let universe = parts.get(idx + 1).map(|s| s.to_string());
+                        let delay = parts.get(idx + 2).and_then(|s| s.parse::<i32>().ok());
+                        let sample_size = parts
+                            .get(idx + 3)
+                            .and_then(|s| s.parse::<usize>().ok())
+                            .unwrap_or(300);
+                        let auto_backtest = parts
+                            .get(idx + 4)
+                            .map(|s| s.to_ascii_lowercase())
+                            .map(|s| matches!(s.as_str(), "1" | "true" | "yes" | "on" | "bt" | "backtest"))
+                            .unwrap_or(true);
+                        Ok(AppCommand::GenerateStart {
+                            model,
+                            batch: n,
+                            interval_sec: 0,
+                            region,
+                            universe,
+                            delay,
+                            sample_size,
+                            auto_backtest,
+                        })
+                    }
                     Some("loop") => {
                         let n = parts.get(2).and_then(|s| s.parse().ok()).unwrap_or(1);
                         let interval_sec = parts
